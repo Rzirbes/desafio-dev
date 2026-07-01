@@ -7,6 +7,11 @@ import { RefreshToken } from '../../domain/entities/RefreshToken';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { IRefreshTokenRepository } from '../../domain/repositories/IRefreshTokenRepository';
 import { AppError } from '../../../../shared/infra/http/errors/AppError';
+import { Inject, Injectable } from '@nestjs/common';
+import {
+  REFRESH_TOKEN_REPOSITORY,
+  USER_REPOSITORY,
+} from '../../domain/repositories/tokens';
 
 type AuthenticateUserRequest = {
   email: string;
@@ -24,10 +29,13 @@ type AuthenticateUserResponse = {
   };
 };
 
+@Injectable()
 export class AuthenticateUserUseCase {
   constructor(
-    private userRepository: IUserRepository,
-    private refreshTokenRepository: IRefreshTokenRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+    @Inject(REFRESH_TOKEN_REPOSITORY)
+    private readonly refreshTokenRepository: IRefreshTokenRepository,
   ) {}
 
   async execute({

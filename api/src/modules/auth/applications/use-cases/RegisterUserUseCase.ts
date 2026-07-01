@@ -1,9 +1,11 @@
-import bcrypt from 'bcrypt';
+import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 import { User } from '../../domain/entities/User';
-import type { IUserRepository } from '../../domain/repositories/IUserRepository';
-import { AppError } from '../../../../shared/infra/http/errors/AppError';
 import { UserRole } from '../../domain/enums/UserRole';
+import type { IUserRepository } from '../../domain/repositories/IUserRepository';
+import { USER_REPOSITORY } from '../../domain/repositories/tokens';
+import { AppError } from '../../../../shared/infra/http/errors/AppError';
 
 type RegisterUserRequest = {
   name: string;
@@ -12,8 +14,12 @@ type RegisterUserRequest = {
   role?: UserRole;
 };
 
+@Injectable()
 export class RegisterUserUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute({ name, email, password, role }: RegisterUserRequest) {
     const userAlreadyExists = await this.userRepository.findByEmail(email);

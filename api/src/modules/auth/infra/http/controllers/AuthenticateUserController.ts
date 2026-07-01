@@ -1,23 +1,15 @@
-import type { Request, Response } from 'express';
-import { z } from 'zod';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthenticateUserUseCase } from '../../../applications/use-cases/AuthenticateUserUseCase';
+import { AuthenticateUserDTO } from '../../../applications/dtos/AuthenticateUserDTO';
 
-const authenticateUserSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
-});
-
+@Controller()
 export class AuthenticateUserController {
-  constructor(private authenticateUserUseCase: AuthenticateUserUseCase) {}
+  constructor(
+    private readonly authenticateUserUseCase: AuthenticateUserUseCase,
+  ) {}
 
-  async handle(request: Request, response: Response) {
-    const { email, password } = authenticateUserSchema.parse(request.body);
-
-    const result = await this.authenticateUserUseCase.execute({
-      email,
-      password,
-    });
-
-    return response.status(200).json(result);
+  @Post('sessions')
+  async handle(@Body() body: AuthenticateUserDTO) {
+    return this.authenticateUserUseCase.execute(body);
   }
 }

@@ -1,12 +1,19 @@
+import { Inject, Injectable } from '@nestjs/common';
+
 import { AppError } from '../../../../shared/infra/http/errors/AppError';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
+import { USER_REPOSITORY } from '../../domain/repositories/tokens';
 
 type GetProfileRequest = {
   userId: string;
 };
 
+@Injectable()
 export class GetProfileUseCase {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute({ userId }: GetProfileRequest) {
     const user = await this.userRepository.findById(userId);

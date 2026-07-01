@@ -1,8 +1,12 @@
-import jwt, { type Secret } from 'jsonwebtoken';
+import { Inject, Injectable } from '@nestjs/common';
+import * as jwt from 'jsonwebtoken';
+import type { Secret } from 'jsonwebtoken';
 import type { StringValue } from 'ms';
+
 import { IRefreshTokenRepository } from '../../domain/repositories/IRefreshTokenRepository';
 import { RefreshToken } from '../../domain/entities/RefreshToken';
 import { AppError } from '../../../../shared/infra/http/errors/AppError';
+import { REFRESH_TOKEN_REPOSITORY } from '../../domain/repositories/tokens';
 
 type RefreshTokenRequest = {
   refreshToken: string;
@@ -17,8 +21,12 @@ type TokenPayload = {
   sub: string;
 };
 
+@Injectable()
 export class RefreshTokenUseCase {
-  constructor(private refreshTokenRepository: IRefreshTokenRepository) {}
+  constructor(
+    @Inject(REFRESH_TOKEN_REPOSITORY)
+    private readonly refreshTokenRepository: IRefreshTokenRepository,
+  ) {}
 
   async execute({
     refreshToken,

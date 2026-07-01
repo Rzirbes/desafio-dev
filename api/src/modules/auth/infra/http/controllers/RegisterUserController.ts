@@ -1,8 +1,8 @@
-import type { Request, Response } from 'express';
+import { Body, Controller, Post } from '@nestjs/common';
 import { z } from 'zod';
 
-import { UserRole } from '../../../domain/enums/UserRole.js';
-import { RegisterUserUseCase } from '../../../applications/use-cases/RegisterUserUseCase.js';
+import { UserRole } from '../../../domain/enums/UserRole';
+import { RegisterUserUseCase } from '../../../applications/use-cases/RegisterUserUseCase';
 
 const registerUserSchema = z.object({
   name: z.string().min(3),
@@ -11,19 +11,19 @@ const registerUserSchema = z.object({
   role: z.enum(UserRole).optional(),
 });
 
+@Controller()
 export class RegisterUserController {
-  constructor(private registerUserUseCase: RegisterUserUseCase) {}
+  constructor(private readonly registerUserUseCase: RegisterUserUseCase) {}
 
-  async handle(request: Request, response: Response) {
-    const data = registerUserSchema.parse(request.body);
+  @Post('users')
+  async handle(@Body() body: unknown) {
+    const data = registerUserSchema.parse(body);
 
-    const user = await this.registerUserUseCase.execute({
+    return this.registerUserUseCase.execute({
       name: data.name,
       email: data.email,
       password: data.password,
       ...(data.role && { role: data.role }),
     });
-
-    return response.status(201).json(user);
   }
 }

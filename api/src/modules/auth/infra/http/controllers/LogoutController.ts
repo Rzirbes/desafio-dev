@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import { Body, Controller, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { LogoutUseCase } from '../../../applications/use-cases/LogoutUseCase';
 
@@ -6,18 +6,20 @@ const logoutSchema = z.object({
   refreshToken: z.string().min(1),
 });
 
+@Controller()
 export class LogoutController {
-  constructor(private logoutUseCase: LogoutUseCase) {}
+  constructor(private readonly logoutUseCase: LogoutUseCase) {}
 
-  async handle(request: Request, response: Response) {
-    const { refreshToken } = logoutSchema.parse(request.body);
+  @Post('logout')
+  async handle(@Body() body: unknown) {
+    const { refreshToken } = logoutSchema.parse(body);
 
     await this.logoutUseCase.execute({
       refreshToken,
     });
 
-    return response.status(200).json({
+    return {
       message: 'Logged out successfully',
-    });
+    };
   }
 }

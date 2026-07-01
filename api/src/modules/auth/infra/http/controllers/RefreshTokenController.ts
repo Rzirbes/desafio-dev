@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import { Body, Controller, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { RefreshTokenUseCase } from '../../../applications/use-cases/RefreshTokenUseCase';
 
@@ -6,16 +6,16 @@ const refreshTokenSchema = z.object({
   refreshToken: z.string().min(1),
 });
 
+@Controller()
 export class RefreshTokenController {
-  constructor(private refreshTokenUseCase: RefreshTokenUseCase) {}
+  constructor(private readonly refreshTokenUseCase: RefreshTokenUseCase) {}
 
-  async handle(request: Request, response: Response) {
-    const { refreshToken } = refreshTokenSchema.parse(request.body);
+  @Post('refresh-token')
+  async handle(@Body() body: unknown) {
+    const { refreshToken } = refreshTokenSchema.parse(body);
 
-    const result = await this.refreshTokenUseCase.execute({
+    return this.refreshTokenUseCase.execute({
       refreshToken,
     });
-
-    return response.status(200).json(result);
   }
 }
