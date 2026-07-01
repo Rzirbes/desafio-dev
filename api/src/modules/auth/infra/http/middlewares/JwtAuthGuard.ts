@@ -14,7 +14,7 @@ type TokenPayload = {
   role: UserRole;
 };
 
-type AuthenticatedRequest = FastifyRequest & {
+export type AuthenticatedRequest = FastifyRequest & {
   user: {
     id: string;
     role: UserRole;

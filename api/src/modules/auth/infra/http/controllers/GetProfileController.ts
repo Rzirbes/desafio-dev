@@ -1,14 +1,10 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import type { FastifyRequest } from 'fastify';
 
 import { GetProfileUseCase } from '../../../applications/use-cases/GetProfileUseCase';
-import { JwtAuthGuard } from '../middlewares/JwtAuthGuard';
-
-type AuthenticatedRequest = FastifyRequest & {
-  user: {
-    id: string;
-  };
-};
+import {
+  AuthenticatedRequest,
+  JwtAuthGuard,
+} from '../middlewares/JwtAuthGuard';
 
 @Controller('auth')
 export class GetProfileController {

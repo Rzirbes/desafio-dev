@@ -1,18 +1,12 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateCategoryUseCase } from '../../applications/use-cases/CreateCategoryUseCase';
-import type { FastifyRequest } from 'fastify';
-import { UserRole } from '@prisma/client';
-import { JwtAuthGuard } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
+import {
+  AuthenticatedRequest,
+  JwtAuthGuard,
+} from '../../../auth/infra/http/middlewares/JwtAuthGuard';
 
 type CreateCategoryBody = {
   name: string;
-};
-
-type AuthenticatedRequest = FastifyRequest & {
-  user: {
-    id: string;
-    role: UserRole;
-  };
 };
 
 @Controller('categories')
