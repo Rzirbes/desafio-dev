@@ -7,15 +7,15 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter(),
   );
-  
+
   const swaggerConfig = new DocumentBuilder()
-  .setTitle('Desafio Técnico - Backend')
-  .setDescription('')
-  .setVersion('1.0')
-  .addTag('')
-  .build();
+    .setTitle('Desafio Técnico - Backend')
+    .setDescription('')
+    .setVersion('1.0')
+    .addTag('')
+    .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('swagger', app, swaggerDocument);
 
@@ -25,4 +25,7 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
 }
-bootstrap();
+bootstrap().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});

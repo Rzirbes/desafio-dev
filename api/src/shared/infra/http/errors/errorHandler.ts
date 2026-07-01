@@ -1,7 +1,7 @@
-import type { NextFunction, Request, Response } from "express";
-import { ZodError } from "zod";
+import type { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
 
-import { AppError } from "./AppError.js";
+import { AppError } from './AppError.js';
 
 export function errorHandler(
   error: Error,
@@ -17,7 +17,7 @@ export function errorHandler(
 
   if (error instanceof ZodError) {
     return response.status(400).json({
-      message: "Validation failed",
+      message: 'Validation failed',
       errors: error.flatten().fieldErrors,
     });
   }
@@ -25,6 +25,6 @@ export function errorHandler(
   console.error(error);
 
   return response.status(500).json({
-    message: "Internal server error",
+    message: 'Internal server error',
   });
 }
