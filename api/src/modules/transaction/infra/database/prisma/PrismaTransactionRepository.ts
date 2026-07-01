@@ -59,6 +59,9 @@ export class PrismaTransactionRepository implements ITransactionRepository {
   async findManyByUserId(userId: string): Promise<Transaction[]> {
     const transactions = await prisma.transaction.findMany({
       where: { userId },
+      include: {
+        category: true,
+      },
       orderBy: {
         date: 'desc',
       },
