@@ -1,4 +1,4 @@
-import { AppError } from 'src/shared/infra/http/errors/AppError';
+import { AppError } from '../../../../shared/infra/http/errors/AppError';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 
 type GetProfileRequest = {

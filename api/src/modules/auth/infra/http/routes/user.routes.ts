@@ -1,17 +1,17 @@
 import { Router } from 'express';
 import { PrismaUserRepository } from '../../database/prisma/repositories/PrismaUserRepository';
 import { PrismaRefreshTokenRepository } from '../../database/prisma/repositories/PrismaRefreshTokenRepository';
-import { GetProfileUseCase } from 'src/modules/auth/applications/use-cases/GetProfileUseCase';
 import { GetProfileController } from '../controllers/GetProfileController';
-import { LogoutUseCase } from 'src/modules/auth/applications/use-cases/LogoutUseCase';
 import { LogoutController } from '../controllers/LogoutController';
-import { RegisterUserUseCase } from 'src/modules/auth/applications/use-cases/RegisterUserUseCase';
-import { AuthenticateUserUseCase } from 'src/modules/auth/applications/use-cases/AuthenticateUserUseCase';
-import { RefreshTokenUseCase } from 'src/modules/auth/applications/use-cases/RefreshTokenUseCase';
 import { RegisterUserController } from '../controllers/RegisterUserController';
 import { AuthenticateUserController } from '../controllers/AuthenticateUserController';
 import { RefreshTokenController } from '../controllers/RefreshTokenController';
 import { ensureAuthenticated } from '../middlewares/ensureAuthenticated';
+import { GetProfileUseCase } from '../../../applications/use-cases/GetProfileUseCase';
+import { LogoutUseCase } from '../../../applications/use-cases/LogoutUseCase';
+import { RegisterUserUseCase } from '../../../applications/use-cases/RegisterUserUseCase';
+import { AuthenticateUserUseCase } from '../../../applications/use-cases/AuthenticateUserUseCase';
+import { RefreshTokenUseCase } from '../../../applications/use-cases/RefreshTokenUseCase';
 
 const userRoutes: Router = Router();
 

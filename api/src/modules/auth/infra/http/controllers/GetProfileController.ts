@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { GetProfileUseCase } from 'src/modules/auth/applications/use-cases/GetProfileUseCase';
+import { GetProfileUseCase } from '../../../applications/use-cases/GetProfileUseCase';
 
 export class GetProfileController {
   constructor(private getProfileUseCase: GetProfileUseCase) {}

@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 import { UserRole } from '../../../domain/enums/UserRole.js';
-import { RegisterUserUseCase } from 'src/modules/auth/applications/use-cases/RegisterUserUseCase.js';
+import { RegisterUserUseCase } from '../../../applications/use-cases/RegisterUserUseCase.js';
 
 const registerUserSchema = z.object({
   name: z.string().min(3),

@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { RefreshTokenUseCase } from 'src/modules/auth/applications/use-cases/RefreshTokenUseCase';
 import { z } from 'zod';
+import { RefreshTokenUseCase } from '../../../applications/use-cases/RefreshTokenUseCase';
 
 const refreshTokenSchema = z.object({
   refreshToken: z.string().min(1),

@@ -1,4 +1,4 @@
-import { Entity } from 'src/shared/domain/entities/Entity';
+import { Entity } from '../../../../shared/domain/entities/Entity';
 import { UserRole } from '../enums/UserRole';
 
 type UserProps = {

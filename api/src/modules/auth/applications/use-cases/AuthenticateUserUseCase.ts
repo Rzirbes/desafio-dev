@@ -6,7 +6,7 @@ import type { StringValue } from 'ms';
 import { RefreshToken } from '../../domain/entities/RefreshToken';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { IRefreshTokenRepository } from '../../domain/repositories/IRefreshTokenRepository';
-import { AppError } from 'src/shared/infra/http/errors/AppError';
+import { AppError } from '../../../../shared/infra/http/errors/AppError';
 
 type AuthenticateUserRequest = {
   email: string;

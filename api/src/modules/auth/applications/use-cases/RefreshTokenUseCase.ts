@@ -1,8 +1,8 @@
 import jwt, { type Secret } from 'jsonwebtoken';
 import type { StringValue } from 'ms';
 import { IRefreshTokenRepository } from '../../domain/repositories/IRefreshTokenRepository';
-import { AppError } from 'src/shared/infra/http/errors/AppError';
 import { RefreshToken } from '../../domain/entities/RefreshToken';
+import { AppError } from '../../../../shared/infra/http/errors/AppError';
 
 type RefreshTokenRequest = {
   refreshToken: string;

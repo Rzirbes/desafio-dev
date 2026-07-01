@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { LogoutUseCase } from 'src/modules/auth/applications/use-cases/LogoutUseCase';
 import { z } from 'zod';
+import { LogoutUseCase } from '../../../applications/use-cases/LogoutUseCase';
 
 const logoutSchema = z.object({
   refreshToken: z.string().min(1),

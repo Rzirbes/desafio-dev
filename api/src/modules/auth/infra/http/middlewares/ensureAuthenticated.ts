@@ -1,6 +1,6 @@
+import { UserRole } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 import jwt, { type Secret } from 'jsonwebtoken';
-import { UserRole } from 'src/modules/auth/domain/enums/UserRole';
 
 type TokenPayload = {
   sub: string;

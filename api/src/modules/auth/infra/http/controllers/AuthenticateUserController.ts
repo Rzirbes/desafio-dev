@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { AuthenticateUserUseCase } from 'src/modules/auth/applications/use-cases/AuthenticateUserUseCase';
 import { z } from 'zod';
+import { AuthenticateUserUseCase } from '../../../applications/use-cases/AuthenticateUserUseCase';
 
 const authenticateUserSchema = z.object({
   email: z.string().email(),
