@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { JwtAuthGuard } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
-import { DeleteCategoryUseCase } from '../../applications/use-cases/DeleteCategoryUseCase';
+import { JwtAuthGuard } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
+import { DeleteCategoryUseCase } from '../../../applications/use-cases/DeleteCategoryUseCase';
 
 type AuthenticatedRequest = Request & {
   user: {

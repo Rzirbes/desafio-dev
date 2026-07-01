@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
-import { JwtAuthGuard } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
-import { GetCategoryByIdUseCase } from '../../applications/use-cases/GetCategoryByIdUseCase';
+import { JwtAuthGuard } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
+import { GetCategoryByIdUseCase } from '../../../applications/use-cases/GetCategoryByIdUseCase';
 
 type AuthenticatedRequest = Request & {
   user: {

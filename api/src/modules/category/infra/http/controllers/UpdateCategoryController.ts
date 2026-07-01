@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Patch, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
-import { UpdateCategoryUseCase } from '../../applications/use-cases/UpdateCategoryUseCase';
+import { JwtAuthGuard } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
+import { UpdateCategoryUseCase } from '../../../applications/use-cases/UpdateCategoryUseCase';
 
 type UpdateCategoryBody = {
   name: string;

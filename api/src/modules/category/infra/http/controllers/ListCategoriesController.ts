@@ -1,7 +1,7 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ListCategoriesUseCase } from '../../applications/use-cases/ListCategoriesUseCase';
-import { JwtAuthGuard } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
-import { AuthenticatedRequest } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
+import { ListCategoriesUseCase } from '../../../applications/use-cases/ListCategoriesUseCase';
+import { JwtAuthGuard } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
+import { AuthenticatedRequest } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
 
 @Controller('categories')
 @UseGuards(JwtAuthGuard)

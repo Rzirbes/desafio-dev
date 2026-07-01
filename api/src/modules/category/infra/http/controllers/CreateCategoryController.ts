@@ -1,9 +1,9 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { CreateCategoryUseCase } from '../../applications/use-cases/CreateCategoryUseCase';
+import { CreateCategoryUseCase } from '../../../applications/use-cases/CreateCategoryUseCase';
 import {
   AuthenticatedRequest,
   JwtAuthGuard,
-} from '../../../auth/infra/http/middlewares/JwtAuthGuard';
+} from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
 
 type CreateCategoryBody = {
   name: string;
