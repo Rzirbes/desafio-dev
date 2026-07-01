@@ -1,30 +1,35 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { PrismaCategoryRepository } from '../database/prisma/PrismaCategoryRepository';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateCategoryUseCase } from '../../applications/use-cases/CreateCategoryUseCase';
+import type { FastifyRequest } from 'fastify';
+import { UserRole } from '@prisma/client';
+import { JwtAuthGuard } from '../../../auth/infra/http/middlewares/JwtAuthGuard';
 
 type CreateCategoryBody = {
   name: string;
-  userId: string;
+};
+
+type AuthenticatedRequest = FastifyRequest & {
+  user: {
+    id: string;
+    role: UserRole;
+  };
 };
 
 @Controller('categories')
 export class CreateCategoryController {
-  async handle(@Body() body: CreateCategoryBody) {
-    const { name, userId } = body;
+  constructor(private readonly createCategoryUseCase: CreateCategoryUseCase) {}
 
-    const categoryRepository = new PrismaCategoryRepository();
-    const createCategoryUseCase = new CreateCategoryUseCase(categoryRepository);
-
-    const category = await createCategoryUseCase.execute({
-      name,
-      userId,
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async create(
+    @Body() body: CreateCategoryBody,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    const category = await this.createCategoryUseCase.execute({
+      name: body.name,
+      userId: request.user.id,
     });
 
     return category;
-  }
-
-  @Post()
-  async create(@Body() body: CreateCategoryBody) {
-    return this.handle(body);
   }
 }

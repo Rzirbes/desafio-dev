@@ -1,13 +1,19 @@
-import { Category } from '../../domain/entities/Category.js';
-import type { ICategoryRepository } from '../../domain/repositories/ICategoryRepository.js';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { Category } from '../../domain/entities/Category';
+import type { ICategoryRepository } from '../../domain/repositories/ICategoryRepository';
+import { CATEGORY_REPOSITORY } from '../../domain/repositories/tokens';
 
 type CreateCategoryUseCaseRequest = {
   name: string;
   userId: string;
 };
 
+@Injectable()
 export class CreateCategoryUseCase {
-  constructor(private readonly categoryRepository: ICategoryRepository) {}
+  constructor(
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
+  ) {}
 
   async execute({
     name,
@@ -17,7 +23,7 @@ export class CreateCategoryUseCase {
       await this.categoryRepository.findByNameAndUserId(name, userId);
 
     if (categoryAlreadyExists) {
-      throw new Error('Category already exists.');
+      throw new ConflictException('Category already exists.');
     }
 
     const category = new Category({
