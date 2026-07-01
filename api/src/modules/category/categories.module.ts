@@ -7,17 +7,21 @@ import { ListCategoriesUseCase } from './applications/use-cases/ListCategoriesUs
 import { ListCategoriesController } from './infra/controllers/ListCategoriesController';
 import { UpdateCategoryController } from './infra/controllers/UpdateCategoryController';
 import { UpdateCategoryUseCase } from './applications/use-cases/UpdateCategoryUseCase';
+import { GetCategoryByIdController } from './infra/controllers/GetCategoryByIdController';
+import { GetCategoryByIdUseCase } from './applications/use-cases/GetCategoryByIdUseCase';
 
 @Module({
   controllers: [
     CreateCategoryController,
     ListCategoriesController,
     UpdateCategoryController,
+    GetCategoryByIdController,
   ],
   providers: [
     CreateCategoryUseCase,
     ListCategoriesUseCase,
     UpdateCategoryUseCase,
+    GetCategoryByIdUseCase,
     {
       provide: CATEGORY_REPOSITORY,
       useClass: PrismaCategoryRepository,
