@@ -12,27 +12,37 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("USER");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    setIsLoading(true);
+
     try {
-      const response = await authService.register({
+      await authService.register({
         name,
         email,
         password,
         role,
       });
 
-      toast.success("Cadastro realizado com sucesso!");
+      setName("");
+      setEmail("");
+      setPassword("");
 
-      console.log(response);
+      setIsRegistered(true);
+
+      toast.success("Cadastro realizado com sucesso!");
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
           : "Não foi possível realizar o cadastro.",
       );
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -104,20 +114,30 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          className="mt-6 w-full rounded-lg bg-primary px-4 py-2 font-medium text-white transition-colors hover:bg-primary-hover"
+          disabled={isLoading}
+          className="mt-6 w-full rounded-lg bg-primary px-4 py-2 font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
         >
-          Criar conta
+          {isLoading ? "Criando conta..." : "Criar conta"}
         </button>
 
-        <p className="mt-4 text-center text-sm text-foreground-secondary">
-          Já tem uma conta?{" "}
+        {isRegistered ? (
           <Link
             href="/login"
-            className="font-medium text-primary hover:underline"
+            className="mt-4 block w-full rounded-lg border border-primary px-4 py-2 text-center font-medium text-primary transition-colors hover:bg-primary hover:text-white"
           >
-            Entrar
+            Ir para o login
           </Link>
-        </p>
+        ) : (
+          <p className="mt-4 text-center text-sm text-foreground-secondary">
+            Já tem uma conta?{" "}
+            <Link
+              href="/login"
+              className="font-medium text-primary hover:underline"
+            >
+              Entrar
+            </Link>
+          </p>
+        )}
       </form>
     </main>
   );
