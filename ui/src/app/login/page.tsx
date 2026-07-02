@@ -3,6 +3,7 @@
 import { FormField } from "@/components/ui/FormField";
 import { authService } from "@/services/auth/authService";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,12 +12,25 @@ export default function LoginPage() {
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const response = await authService.authenticate({
-      email,
-      password,
-    });
+    try {
+      const response = await authService.authenticate({
+        email,
+        password,
+      });
 
-    console.log(response);
+      toast.success("Login realizado com sucesso!");
+
+      console.log(response);
+
+      // futuramente:
+      // router.push("/dashboard");
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível realizar o login.",
+      );
+    }
   }
 
   return (
