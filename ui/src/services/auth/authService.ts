@@ -8,7 +8,7 @@ import { clientFetcher } from "../clientFetcher";
 
 export const authService = {
   authenticate(data: AuthenticateRequest) {
-    return clientFetcher<AuthenticateResponse>("/auth/login", {
+    return clientFetcher<AuthenticateResponse>("/sessions", {
       method: "POST",
       body: JSON.stringify(data),
     });
