@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+
+import { Button } from "@/components/ui/Button";
 
 export default function Home() {
   return (
@@ -20,20 +21,12 @@ export default function Home() {
         Desafio Técnico Nível Pleno
       </p>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Link
-          href="/login"
-          className="rounded-lg bg-primary px-6 py-3 text-lg font-bold text-primary-foreground transition hover:bg-primary-hover"
-        >
-          ACESSAR SISTEMA
-        </Link>
+      <div className="flex w-full max-w-md flex-col gap-3 sm:flex-row">
+        <Button href="/login">ACESSAR SISTEMA</Button>
 
-        <Link
-          href="/instructions"
-          className="rounded-lg border border-primary px-6 py-3 text-lg font-bold text-primary transition hover:bg-primary hover:text-primary-foreground"
-        >
+        <Button href="/instructions" variant="outline">
           VER INSTRUÇÕES
-        </Link>
+        </Button>
       </div>
     </main>
   );

@@ -1,17 +1,22 @@
 "use client";
 
-import { FormField } from "@/components/ui/FormField";
-import { authService } from "@/services/auth/authService";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/Button";
+import { FormField } from "@/components/ui/FormField";
+import { authService } from "@/services/auth/authService";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    setIsLoading(true);
 
     try {
       const response = await authService.authenticate({
@@ -31,6 +36,8 @@ export default function LoginPage() {
           ? error.message
           : "Não foi possível realizar o login.",
       );
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -53,9 +60,7 @@ export default function LoginPage() {
             type="email"
             placeholder="seu@email.com"
             value={email}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(event.target.value)
-            }
+            onChange={(event) => setEmail(event.target.value)}
           />
 
           <FormField
@@ -64,18 +69,14 @@ export default function LoginPage() {
             type="password"
             placeholder="Sua senha"
             value={password}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setPassword(event.target.value)
-            }
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
 
-        <button
-          type="submit"
-          className="mt-6 w-full rounded-lg bg-primary px-4 py-2 font-medium text-white transition-colors hover:bg-primary-hover"
-        >
-          Entrar
-        </button>
+        <Button type="submit" isLoading={isLoading} className="mt-6">
+          {isLoading ? "Entrando..." : "Entrar"}
+        </Button>
+
         <p className="mt-4 text-center text-sm text-foreground-secondary">
           Ainda não possui uma conta?{" "}
           <Link

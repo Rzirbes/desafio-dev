@@ -6,6 +6,7 @@ import { authService } from "@/services/auth/authService";
 import { toast } from "sonner";
 import { useState } from "react";
 import { UserRole } from "@/types/auth";
+import { Button } from "@/components/ui/Button";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -112,21 +113,14 @@ export default function RegisterPage() {
           </select>
         </div> */}
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="mt-6 w-full rounded-lg bg-primary px-4 py-2 font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
-        >
+        <Button type="submit" isLoading={isLoading} className="mt-6">
           {isLoading ? "Criando conta..." : "Criar conta"}
-        </button>
+        </Button>
 
         {isRegistered ? (
-          <Link
-            href="/login"
-            className="mt-4 block w-full rounded-lg border border-primary px-4 py-2 text-center font-medium text-primary transition-colors hover:bg-primary hover:text-white"
-          >
+          <Button href="/login" variant="outline" className="mt-4">
             Ir para o login
-          </Link>
+          </Button>
         ) : (
           <p className="mt-4 text-center text-sm text-foreground-secondary">
             Já tem uma conta?{" "}
