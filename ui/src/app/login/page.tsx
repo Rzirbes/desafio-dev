@@ -7,11 +7,15 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { FormField } from "@/components/ui/FormField";
 import { authService } from "@/services/auth/authService";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuth();
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,12 +28,11 @@ export default function LoginPage() {
         password,
       });
 
+      login(response.accessToken, response.user);
+
       toast.success("Login realizado com sucesso!");
 
-      console.log(response);
-
-      // futuramente:
-      // router.push("/dashboard");
+      router.push("/dashboard");
     } catch (error) {
       toast.error(
         error instanceof Error
