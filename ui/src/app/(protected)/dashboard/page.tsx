@@ -6,6 +6,7 @@ import { CreateTransactionModal } from "@/components/transactions/CreateTransact
 import { useAuth } from "@/hooks/useAuth";
 import { categoriesService } from "@/services/categories/categoriesService";
 import useSWR from "swr";
+import { Header } from "@/components/layout/Header";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -20,20 +21,9 @@ export default function DashboardPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-background-secondary px-4 py-8">
+      <main className="min-h-screen bg-background px-4 py-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-8">
-          <header className="flex flex-col gap-2">
-            <p className="text-sm font-medium text-foreground-secondary">
-              Bem-vindo
-            </p>
-
-            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-
-            <p className="max-w-2xl text-sm text-foreground-secondary">
-              Acompanhe suas finanças, receitas, despesas e categorias em um só
-              lugar.
-            </p>
-          </header>
+          <Header />
 
           <section className="grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl bg-white p-5 shadow-sm">
