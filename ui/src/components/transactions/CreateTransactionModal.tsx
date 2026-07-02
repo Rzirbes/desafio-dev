@@ -95,7 +95,11 @@ export function CreateTransactionModal({
             <Select
               value={categoryId}
               onValueChange={setCategoryId}
-              placeholder="Selecione uma categoria"
+              placeholder={
+                categories.length > 0
+                  ? "Selecione uma categoria"
+                  : "Nenhuma categoria encontrada"
+              }
               options={categories.map((category) => ({
                 value: category.id,
                 label: category.name,
