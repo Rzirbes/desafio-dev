@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CreateTransactionModal } from "@/components/transactions/CreateTransactionModal";
 import { useAuth } from "@/hooks/useAuth";
-import { Category } from "@/types/category";
 import { categoriesService } from "@/services/categories/categoriesService";
+import useSWR from "swr";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -13,21 +13,10 @@ export default function DashboardPage() {
   const [isCreateTransactionModalOpen, setIsCreateTransactionModalOpen] =
     useState(false);
 
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    async function loadCategories() {
-      if (!accessToken) {
-        return;
-      }
-
-      const response = await categoriesService.list(accessToken);
-
-      setCategories(response);
-    }
-
-    loadCategories();
-  }, [accessToken]);
+  const { data: categories = [] } = useSWR(
+    accessToken ? "/categories" : null,
+    () => categoriesService.list(accessToken!),
+  );
 
   return (
     <>

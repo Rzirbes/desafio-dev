@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { FormField } from "@/components/ui/FormField";
 import { toast } from "sonner";
 import { categoriesService } from "@/services/categories/categoriesService";
+import { mutate } from "swr";
 
 type CreateCategoryModalProps = {
   isOpen: boolean;
@@ -37,6 +38,8 @@ export function CreateCategoryModal({
       setIsLoading(true);
 
       await categoriesService.create({ name }, token);
+
+      await mutate("/categories");
 
       toast.success("Categoria cadastrada com sucesso!");
       setName("");
