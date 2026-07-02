@@ -38,3 +38,8 @@ export type User = {
   name: string;
   email: string;
 };
+
+export type RefreshTokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+};

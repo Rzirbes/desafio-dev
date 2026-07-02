@@ -28,7 +28,7 @@ export default function LoginPage() {
         password,
       });
 
-      login(response.accessToken, response.user);
+      login(response.accessToken, response.refreshToken, response.user);
 
       toast.success("Login realizado com sucesso!");
 

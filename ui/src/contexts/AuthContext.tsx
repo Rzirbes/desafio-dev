@@ -7,9 +7,11 @@ import { AuthUser } from "@/types/auth";
 type AuthContextData = {
   user: AuthUser | null;
   accessToken: string | null;
+  refreshToken: string | null;
   loading: boolean;
 
-  login: (accessToken: string, user: AuthUser) => void;
+  login: (accessToken: string, refreshToken: string, user: AuthUser) => void;
+
   logout: () => void;
 };
 
@@ -23,32 +25,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
   useEffect(() => {
     const storedAccessToken = localStorage.getItem("@finance:token");
+    const storedRefreshToken = localStorage.getItem("@finance:refreshToken");
     const storedUser = localStorage.getItem("@finance:user");
 
-    if (storedAccessToken && storedUser) {
+    if (storedAccessToken && storedRefreshToken && storedUser) {
       setAccessToken(storedAccessToken);
+      setRefreshToken(storedRefreshToken);
       setUser(JSON.parse(storedUser));
     }
 
     setLoading(false);
   }, []);
 
-  function login(accessToken: string, user: AuthUser) {
+  function login(accessToken: string, refreshToken: string, user: AuthUser) {
     localStorage.setItem("@finance:token", accessToken);
+    localStorage.setItem("@finance:refreshToken", refreshToken);
     localStorage.setItem("@finance:user", JSON.stringify(user));
 
     setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
     setUser(user);
   }
 
   function logout() {
     localStorage.removeItem("@finance:token");
+    localStorage.removeItem("@finance:refreshToken");
     localStorage.removeItem("@finance:user");
 
     setAccessToken(null);
+    setRefreshToken(null);
     setUser(null);
   }
 
@@ -57,6 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       value={{
         user,
         accessToken,
+        refreshToken,
         loading,
         login,
         logout,

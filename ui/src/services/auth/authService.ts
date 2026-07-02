@@ -2,6 +2,7 @@ import type {
   AuthenticateRequest,
   AuthenticateResponse,
   AuthUser,
+  RefreshTokenResponse,
   RegisterRequest,
   RegisterResponse,
 } from "@/types/auth";
@@ -32,6 +33,13 @@ export const authService = {
     return clientFetcher<void>("/auth/logout", {
       method: "POST",
       token,
+    });
+  },
+
+  refreshToken(refreshToken: string) {
+    return clientFetcher<RefreshTokenResponse>("/refresh-token", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken }),
     });
   },
 };
