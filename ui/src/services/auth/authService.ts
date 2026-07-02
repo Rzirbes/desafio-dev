@@ -3,6 +3,7 @@ import type {
   AuthenticateResponse,
   AuthUser,
   RegisterRequest,
+  RegisterResponse,
 } from "@/types/auth";
 import { clientFetcher } from "../clientFetcher";
 
@@ -15,7 +16,7 @@ export const authService = {
   },
 
   register(data: RegisterRequest) {
-    return clientFetcher<AuthenticateResponse>("/auth/register", {
+    return clientFetcher<RegisterResponse>("/users", {
       method: "POST",
       body: JSON.stringify(data),
     });

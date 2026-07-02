@@ -16,6 +16,15 @@ export type RegisterRequest = {
   name: string;
   email: string;
   password: string;
+  role: UserRole;
+};
+
+export type RegisterResponse = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
 };
 
 export type AuthenticateResponse = {

@@ -1,35 +1,37 @@
 "use client";
 
+import Link from "next/link";
 import { FormField } from "@/components/ui/FormField";
 import { authService } from "@/services/auth/authService";
-import Link from "next/link";
-import { useState } from "react";
 import { toast } from "sonner";
+import { useState } from "react";
+import { UserRole } from "@/types/auth";
 
-export default function LoginPage() {
+export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole>("USER");
 
-  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+  async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      const response = await authService.authenticate({
+      const response = await authService.register({
+        name,
         email,
         password,
+        role,
       });
 
-      toast.success("Login realizado com sucesso!");
+      toast.success("Cadastro realizado com sucesso!");
 
       console.log(response);
-
-      // futuramente:
-      // router.push("/dashboard");
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Não foi possível realizar o login.",
+          : "Não foi possível realizar o cadastro.",
       );
     }
   }
@@ -37,16 +39,27 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         className="w-full max-w-sm rounded-2xl bg-background p-8 shadow"
       >
-        <h1 className="mb-2 text-2xl font-bold text-foreground">Login</h1>
+        <h1 className="mb-2 text-2xl font-bold text-foreground">Cadastro</h1>
 
         <p className="mb-6 text-sm text-foreground-secondary">
-          Acesse sua conta para gerenciar suas finanças.
+          Crie sua conta para começar a gerenciar suas finanças.
         </p>
 
         <div className="space-y-4">
+          <FormField
+            id="name"
+            label="Nome"
+            type="text"
+            placeholder="Seu nome"
+            value={name}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setName(event.target.value)
+            }
+          />
+
           <FormField
             id="email"
             label="E-mail"
@@ -70,19 +83,39 @@ export default function LoginPage() {
           />
         </div>
 
+        {/* <div>
+          <label
+            htmlFor="role"
+            className="mb-1 block text-sm font-medium text-foreground"
+          >
+            Perfil
+          </label>
+
+          <select
+            id="role"
+            value={role}
+            onChange={(event) => setRole(event.target.value as UserRole)}
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-slate-900"
+          >
+            <option value="USER">Usuário</option>
+            <option value="ADMIN">Administrador</option>
+          </select>
+        </div> */}
+
         <button
           type="submit"
           className="mt-6 w-full rounded-lg bg-primary px-4 py-2 font-medium text-white transition-colors hover:bg-primary-hover"
         >
-          Entrar
+          Criar conta
         </button>
+
         <p className="mt-4 text-center text-sm text-foreground-secondary">
-          Ainda não possui uma conta?{" "}
+          Já tem uma conta?{" "}
           <Link
-            href="/register"
+            href="/login"
             className="font-medium text-primary hover:underline"
           >
-            Cadastre-se
+            Entrar
           </Link>
         </p>
       </form>
