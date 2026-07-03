@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Transaction } from "@/types/transaction";
 import { TransactionCard } from "./TransactionCard";
+import { MobileTransactionCard } from "./MobileTransactionCard";
 
 type TransactionsListProps = {
   transactions: Transaction[];
@@ -63,12 +64,27 @@ export function TransactionsList({
         <>
           <div className="mt-8 grid min-w-0 gap-4">
             {transactions.map((transaction) => (
-              <TransactionCard
-                key={transaction._id}
-                transaction={transaction}
-                onEdit={onEditTransaction}
-                onDelete={onDeleteTransaction}
-              />
+              <div className="mt-8 grid min-w-0 gap-4">
+                {transactions.map((transaction) => (
+                  <div key={transaction._id}>
+                    <div className="block sm:hidden">
+                      <MobileTransactionCard
+                        transaction={transaction}
+                        onEdit={onEditTransaction}
+                        onDelete={onDeleteTransaction}
+                      />
+                    </div>
+
+                    <div className="hidden sm:block">
+                      <TransactionCard
+                        transaction={transaction}
+                        onEdit={onEditTransaction}
+                        onDelete={onDeleteTransaction}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             ))}
           </div>
 
