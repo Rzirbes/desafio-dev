@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Transaction } from "@/types/transaction";
 import { MoreVertical } from "lucide-react";
+import { TransactionCard } from "./TransactionCard";
 
 type TransactionsListProps = {
   transactions: Transaction[];
@@ -61,71 +62,14 @@ export function TransactionsList({
       {!isLoading && transactions.length > 0 && (
         <>
           <div className="mt-8 grid gap-4">
-            {transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="
-    rounded-2xl
-    border border-black/10
-    bg-slate-50
-    px-5
-    py-4
-    transition-all
-    hover:shadow-md
-  "
-              >
-                <div className="flex items-center justify-between">
-                  {/* Esquerda */}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-black">
-                      {transaction.description}
-                    </h3>
-
-                    <span
-                      className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                        transaction.type === "INCOME"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {transaction.type === "INCOME" ? "Receita" : "Despesa"}
-                    </span>
-                  </div>
-
-                  {/* Centro */}
-                  <div className="flex flex-1 flex-col items-center">
-                    <span
-                      className={`text-lg font-bold ${
-                        transaction.type === "INCOME"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {transaction.type === "INCOME" ? "+" : "-"}
-                      {formatCurrency(transaction.amount)}
-                    </span>
-
-                    <span className="mt-1 text-sm text-foreground-secondary">
-                      {new Date(transaction.date).toLocaleDateString("pt-BR")}
-                    </span>
-                  </div>
-
-                  {/* Direita */}
-                  <button
-                    className="
-        rounded-lg
-        p-2
-        text-foreground-secondary
-        transition-colors
-        hover:bg-slate-200
-        hover:text-foreground
-      "
-                  >
-                    <MoreVertical size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
+            <div className="mt-8 grid gap-4">
+              {transactions.map((transaction) => (
+                <TransactionCard
+                  key={transaction.id}
+                  transaction={transaction}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="mt-6 flex items-center justify-between">
