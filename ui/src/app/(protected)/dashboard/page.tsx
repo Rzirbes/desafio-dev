@@ -1,12 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
 import { useState } from "react";
+import useSWR from "swr";
+
+import { Button } from "@/components/ui/Button";
+import { Header } from "@/components/layout/Header";
 import { CreateTransactionModal } from "@/components/transactions/CreateTransactionModal";
 import { useAuth } from "@/hooks/useAuth";
 import { categoriesService } from "@/services/categories/categoriesService";
-import useSWR from "swr";
-import { Header } from "@/components/layout/Header";
+import { transactionsService } from "@/services/transactions/transactionsService";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -14,10 +16,37 @@ export default function DashboardPage() {
   const [isCreateTransactionModalOpen, setIsCreateTransactionModalOpen] =
     useState(false);
 
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
   const { data: categories = [] } = useSWR(
     accessToken ? "/categories" : null,
     () => categoriesService.list(accessToken!),
   );
+
+  const { data: transactionsResponse, isLoading } = useSWR(
+    accessToken ? [`/transactions`, page, limit] : null,
+    () => transactionsService.list(accessToken!, { page, limit }),
+  );
+
+  const transactions = transactionsResponse?.transactions ?? [];
+
+  const incomeTotal = transactions
+    .filter((transaction) => transaction.type === "INCOME")
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  const expenseTotal = transactions
+    .filter((transaction) => transaction.type === "EXPENSE")
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  const balance = incomeTotal - expenseTotal;
+
+  function formatCurrency(value: number) {
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
 
   return (
     <>
@@ -29,21 +58,21 @@ export default function DashboardPage() {
             <div className="rounded-2xl bg-white p-5 shadow-sm">
               <p className="text-sm text-foreground-secondary">Saldo atual</p>
               <strong className="mt-2 block text-2xl text-foreground">
-                R$ 0,00
+                {formatCurrency(balance)}
               </strong>
             </div>
 
             <div className="rounded-2xl bg-white p-5 shadow-sm">
               <p className="text-sm text-foreground-secondary">Receitas</p>
               <strong className="mt-2 block text-2xl text-green-600">
-                R$ 0,00
+                {formatCurrency(incomeTotal)}
               </strong>
             </div>
 
             <div className="rounded-2xl bg-white p-5 shadow-sm">
               <p className="text-sm text-foreground-secondary">Despesas</p>
               <strong className="mt-2 block text-2xl text-red-600">
-                R$ 0,00
+                {formatCurrency(expenseTotal)}
               </strong>
             </div>
           </section>
@@ -56,7 +85,7 @@ export default function DashboardPage() {
                 </h2>
 
                 <p className="mt-1 text-sm text-foreground-secondary">
-                  Comece cadastrando suas primeiras receitas ou despesas.
+                  Acompanhe suas receitas e despesas cadastradas.
                 </p>
               </div>
 
@@ -65,11 +94,105 @@ export default function DashboardPage() {
               </Button>
             </div>
 
-            <div className="mt-8 rounded-xl border border-dashed border-slate-300 p-8 text-center">
-              <p className="text-sm text-foreground-secondary">
-                Nenhuma transação cadastrada ainda.
-              </p>
-            </div>
+            {isLoading && (
+              <div className="mt-8 rounded-xl border border-dashed border-slate-300 p-8 text-center">
+                <p className="text-sm text-foreground-secondary">
+                  Carregando transações...
+                </p>
+              </div>
+            )}
+
+            {!isLoading && transactions.length === 0 && (
+              <div className="mt-8 rounded-xl border border-dashed border-slate-300 p-8 text-center">
+                <p className="text-sm text-foreground-secondary">
+                  Nenhuma transação cadastrada ainda.
+                </p>
+              </div>
+            )}
+
+            {!isLoading && transactions.length > 0 && (
+              <>
+                <div className="mt-8 overflow-hidden rounded-xl border border-border">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-background-secondary text-foreground-secondary">
+                      <tr>
+                        <th className="px-4 py-3 font-medium">Descrição</th>
+                        <th className="px-4 py-3 font-medium">Tipo</th>
+                        <th className="px-4 py-3 font-medium">Valor</th>
+                        <th className="px-4 py-3 font-medium">Data</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {transactions.map((transaction) => (
+                        <tr
+                          key={transaction._id}
+                          className="border-t border-border"
+                        >
+                          <td className="px-4 py-3 text-foreground">
+                            {transaction.description}
+                          </td>
+
+                          <td className="px-4 py-3">
+                            {transaction.type === "INCOME" ? (
+                              <span className="text-green-600">Receita</span>
+                            ) : (
+                              <span className="text-red-600">Despesa</span>
+                            )}
+                          </td>
+
+                          <td
+                            className={`px-4 py-3 font-medium ${
+                              transaction.type === "INCOME"
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {transaction.amount.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </td>
+
+                          <td className="px-4 py-3 text-foreground-secondary">
+                            {new Date(transaction.date).toLocaleDateString(
+                              "pt-BR",
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <p className="text-sm text-foreground-secondary">
+                    Página {transactionsResponse?.page} de{" "}
+                    {transactionsResponse?.totalPages}
+                  </p>
+
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={page <= 1}
+                      onClick={() => setPage((currentPage) => currentPage - 1)}
+                    >
+                      Anterior
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={page >= (transactionsResponse?.totalPages ?? 1)}
+                      onClick={() => setPage((currentPage) => currentPage + 1)}
+                    >
+                      Próxima
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
           </section>
         </div>
       </main>

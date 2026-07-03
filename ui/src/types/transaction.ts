@@ -13,7 +13,7 @@ export type Transaction = {
 };
 
 export type PaginatedTransactionsResponse = {
-  data: Transaction[];
+  transactions: Transaction[];
   total: number;
   page: number;
   limit: number;
