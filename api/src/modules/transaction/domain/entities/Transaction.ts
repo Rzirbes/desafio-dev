@@ -7,6 +7,10 @@ type TransactionProps = {
   type: TransactionType;
   userId: string;
   categoryId: string;
+  category?: {
+    id: string;
+    name: string;
+  };
   date: Date;
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,6 +27,10 @@ export class Transaction {
   public date: Date;
   public createdAt: Date;
   public updatedAt: Date;
+  public category?: {
+    id: string;
+    name: string;
+  };
 
   constructor(props: TransactionProps, id?: string) {
     this._id = id ?? randomUUID();
@@ -35,6 +43,7 @@ export class Transaction {
     this.date = props.date;
     this.createdAt = props.createdAt ?? new Date();
     this.updatedAt = props.updatedAt ?? new Date();
+    this.category = props.category;
   }
 
   get id(): string {

@@ -55,6 +55,11 @@ export function TransactionCard({
           >
             {isIncome ? "Receita" : "Despesa"}
           </span>
+          {transaction.category && (
+            <span className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700">
+              {transaction.category.name}
+            </span>
+          )}
         </div>
 
         <div className="w-[120px] shrink-0 text-right">

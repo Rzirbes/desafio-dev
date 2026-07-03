@@ -13,6 +13,10 @@ export type Transaction = {
   type: TransactionType;
   userId: string;
   categoryId: string;
+  category?: {
+    id: string;
+    name: string;
+  };
   date: string;
   createdAt: string;
   updatedAt: string;

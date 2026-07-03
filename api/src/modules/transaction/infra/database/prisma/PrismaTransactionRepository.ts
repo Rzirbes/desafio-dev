@@ -134,6 +134,12 @@ export class PrismaTransactionRepository implements ITransactionRepository {
               date: transaction.date,
               userId: transaction.userId,
               categoryId: transaction.categoryId,
+              category: transaction.category
+                ? {
+                    id: transaction.category.id,
+                    name: transaction.category.name,
+                  }
+                : undefined,
               createdAt: transaction.createdAt,
               updatedAt: transaction.updatedAt,
             },
