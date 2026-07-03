@@ -12,6 +12,7 @@ import { CreateCategoryModal } from "../categories/CreateCategoryModal";
 import { useAuth } from "@/hooks/useAuth";
 import { transactionsService } from "@/services/transactions/transactionsService";
 import { TransactionType } from "@/types/transaction";
+import { DatePicker } from "../ui/DatePicker";
 
 type CreateTransactionModalProps = {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export function CreateTransactionModal({
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<TransactionType>("EXPENSE");
   const [categoryId, setCategoryId] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] =
     useState(false);
@@ -56,7 +57,7 @@ export function CreateTransactionModal({
         amount: Number(amount),
         type,
         categoryId,
-        date: new Date(date).toISOString(),
+        date: date.toISOString(),
       });
 
       await onTransactionCreated();
@@ -67,7 +68,7 @@ export function CreateTransactionModal({
       setAmount("");
       setType("EXPENSE");
       setCategoryId("");
-      setDate("");
+      setDate(new Date());
 
       onClose();
     } catch (error) {
@@ -161,13 +162,11 @@ export function CreateTransactionModal({
               </div>
             </div>
 
-            <FormField
-              label="Data"
-              type="date"
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              required
-            />
+            <div className="space-y-1">
+              <Label>Data</Label>
+
+              <DatePicker selected={date} onChange={setDate} />
+            </div>
 
             <div className="flex justify-end gap-3 pt-4">
               <Button type="submit" disabled={isLoading}>
