@@ -30,7 +30,7 @@ export function TransactionsList({
   }
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm">
+    <section className="w-full min-w-0 overflow-hidden rounded-2xl bg-white p-6 shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-foreground">Transações</h2>
@@ -61,15 +61,10 @@ export function TransactionsList({
 
       {!isLoading && transactions.length > 0 && (
         <>
-          <div className="mt-8 grid gap-4">
-            <div className="mt-8 grid gap-4">
-              {transactions.map((transaction) => (
-                <TransactionCard
-                  key={transaction.id}
-                  transaction={transaction}
-                />
-              ))}
-            </div>
+          <div className="mt-8 grid min-w-0 gap-4">
+            {transactions.map((transaction) => (
+              <TransactionCard key={transaction.id} transaction={transaction} />
+            ))}
           </div>
 
           <div className="mt-6 flex items-center justify-between">

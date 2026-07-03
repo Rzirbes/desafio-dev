@@ -17,10 +17,10 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
   const isIncome = transaction.type === "INCOME";
 
   return (
-    <div className="rounded-2xl border border-black/10 bg-slate-50 px-5 py-4 transition-all hover:shadow-md">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h3 className="font-semibold text-black">
+    <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-slate-50 px-5 py-4 transition-all hover:shadow-md">
+      <div className="flex min-w-0 items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-black">
             {transaction.description}
           </h3>
 
@@ -35,9 +35,9 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
           </span>
         </div>
 
-        <div className="flex flex-1 flex-col items-center">
+        <div className="w-[120px] shrink-0 text-right">
           <span
-            className={`text-lg font-bold ${
+            className={`block text-lg font-bold ${
               isIncome ? "text-green-600" : "text-red-600"
             }`}
           >
@@ -45,14 +45,14 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
             {formatCurrency(transaction.amount)}
           </span>
 
-          <span className="mt-1 text-sm text-foreground-secondary">
+          <span className="mt-1 block text-sm text-foreground-secondary">
             {new Date(transaction.date).toLocaleDateString("pt-BR")}
           </span>
         </div>
 
         <button
           type="button"
-          className="rounded-lg p-2 text-foreground-secondary transition-colors hover:bg-slate-200 hover:text-foreground"
+          className="shrink-0 rounded-lg p-2 text-foreground-secondary transition-colors hover:bg-slate-200 hover:text-foreground"
         >
           <MoreVertical size={18} />
         </button>
