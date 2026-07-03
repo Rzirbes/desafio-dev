@@ -22,10 +22,6 @@ export class GetTransactionByIdUseCase {
     userId,
   }: GetTransactionByIdRequest): Promise<Transaction> {
     const transaction = await this.transactionRepository.findById(id);
-    console.log({
-      transactionUserId: transaction?.userId,
-      tokenUserId: userId,
-    });
 
     if (!transaction) {
       throw new AppError('Transaction not found', 404);

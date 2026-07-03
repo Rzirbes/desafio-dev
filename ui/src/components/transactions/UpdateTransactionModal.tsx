@@ -36,7 +36,6 @@ export function UpdateTransactionModal({
 
   const { accessToken } = useAuth();
 
-  console.log("transaction", transaction);
 
   useEffect(() => {
     if (!isOpen) return;
