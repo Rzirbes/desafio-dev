@@ -1,13 +1,11 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+
+import { CreateCategoryDTO } from '../../../applications/dtos/CreateCategoryDTO';
 import { CreateCategoryUseCase } from '../../../applications/use-cases/CreateCategoryUseCase';
 import {
   AuthenticatedRequest,
   JwtAuthGuard,
 } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
-
-type CreateCategoryBody = {
-  name: string;
-};
 
 @Controller('categories')
 export class CreateCategoryController {
@@ -16,14 +14,12 @@ export class CreateCategoryController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(
-    @Body() body: CreateCategoryBody,
+    @Body() body: CreateCategoryDTO,
     @Req() request: AuthenticatedRequest,
   ) {
-    const category = await this.createCategoryUseCase.execute({
+    return this.createCategoryUseCase.execute({
       name: body.name,
       userId: request.user.id,
     });
-
-    return category;
   }
 }
