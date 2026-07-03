@@ -1,22 +1,20 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { z } from 'zod';
-import { TransactionType } from '../../../domain/enums/TransactionType';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+
 import { CreateTransactionUseCase } from '../../../applications/use-cases/CreateTransactionUseCase';
 import {
   AuthenticatedRequest,
   JwtAuthGuard,
 } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
+import { CreateTransactionBodyDTO } from '../../../applications/dtos/CreateTransactionBodyDTO';
 
-const createTransactionBodySchema = z.object({
-  description: z.string().min(1),
-  amount: z.number().positive(),
-  type: z.nativeEnum(TransactionType),
-  categoryId: z.string().uuid(),
-  date: z.coerce.date().optional(),
-});
-
-type CreateTransactionBody = z.infer<typeof createTransactionBodySchema>;
-
+@ApiTags('transactions')
+@ApiBearerAuth()
 @Controller('transactions')
 export class CreateTransactionController {
   constructor(
@@ -25,12 +23,13 @@ export class CreateTransactionController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Create transaction' })
+  @ApiCreatedResponse({ description: 'Transaction created successfully.' })
   async handle(
-    @Body() body: CreateTransactionBody,
+    @Body() body: CreateTransactionBodyDTO,
     @Req() req: AuthenticatedRequest,
   ) {
-    const { description, amount, type, categoryId, date } =
-      createTransactionBodySchema.parse(body);
+    const { description, amount, type, categoryId, date } = body;
 
     const userId = req.user.id;
 
@@ -40,7 +39,7 @@ export class CreateTransactionController {
       type,
       categoryId,
       userId,
-      date,
+      date: date ? new Date(date) : undefined,
     });
 
     return {

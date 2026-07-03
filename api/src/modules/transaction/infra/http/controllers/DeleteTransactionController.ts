@@ -6,6 +6,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiNoContentResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request } from 'express';
 
 import { DeleteTransactionUseCase } from '../../../applications/use-cases/DeleteTransactionUseCase';
@@ -13,10 +20,12 @@ import { JwtAuthGuard } from '../../../../auth/infra/http/middlewares/JwtAuthGua
 
 type AuthenticatedRequest = Request & {
   user: {
-    sub: string;
+    id: string;
   };
 };
 
+@ApiTags('transactions')
+@ApiBearerAuth()
 @Controller('transactions')
 @UseGuards(JwtAuthGuard)
 export class DeleteTransactionController {
@@ -26,6 +35,15 @@ export class DeleteTransactionController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiOperation({ summary: 'Delete transaction' })
+  @ApiParam({
+    name: 'id',
+    description: 'Transaction ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiNoContentResponse({
+    description: 'Transaction deleted successfully.',
+  })
   async handle(
     @Param('id') id: string,
     @Req() request: AuthenticatedRequest,

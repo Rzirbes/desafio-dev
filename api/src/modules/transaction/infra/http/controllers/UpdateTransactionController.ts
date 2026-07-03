@@ -1,21 +1,21 @@
 import { Body, Controller, Param, Put, Req, UseGuards } from '@nestjs/common';
-import { z } from 'zod';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import {
   AuthenticatedRequest,
   JwtAuthGuard,
 } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
 import { UpdateTransactionUseCase } from '../../../applications/use-cases/UpdateTransactionUseCase';
-import { TransactionType } from '../../../domain/enums/TransactionType';
+import { UpdateTransactionBodyDTO } from '../../../applications/dtos/UpdateTransactionBodyDTO';
 
-const updateTransactionBodySchema = z.object({
-  description: z.string().min(1),
-  amount: z.number().positive(),
-  type: z.nativeEnum(TransactionType),
-  categoryId: z.string().uuid(),
-  date: z.coerce.date().optional(),
-});
-
+@ApiTags('transactions')
+@ApiBearerAuth()
 @Controller('transactions')
 @UseGuards(JwtAuthGuard)
 export class UpdateTransactionController {
@@ -24,13 +24,15 @@ export class UpdateTransactionController {
   ) {}
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update transaction' })
+  @ApiParam({ name: 'id', description: 'Transaction ID' })
+  @ApiOkResponse({ description: 'Transaction updated successfully.' })
   async handle(
     @Param('id') id: string,
-    @Body() body: unknown,
+    @Body() body: UpdateTransactionBodyDTO,
     @Req() req: AuthenticatedRequest,
   ) {
-    const { description, amount, type, categoryId, date } =
-      updateTransactionBodySchema.parse(body);
+    const { description, amount, type, categoryId, date } = body;
 
     const transaction = await this.updateTransactionUseCase.execute({
       id,
@@ -39,7 +41,7 @@ export class UpdateTransactionController {
       amount,
       type,
       categoryId,
-      date,
+      date: date ? new Date(date) : undefined,
     });
 
     return { transaction };
