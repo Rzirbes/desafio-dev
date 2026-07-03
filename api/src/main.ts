@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
@@ -10,12 +11,21 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Desafio Técnico - Backend')
     .setDescription('')
     .setVersion('1.0')
     .addTag('')
     .build();
+
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('swagger', app, swaggerDocument);
 
@@ -24,8 +34,10 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
+
   await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
 }
+
 bootstrap().catch((error: unknown) => {
   console.error(error);
   process.exit(1);

@@ -1,18 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { AppError } from '../../../../shared/infra/http/errors/AppError';
 import { Transaction } from '../../domain/entities/Transaction';
-import { TransactionType } from '../../domain/enums/TransactionType';
 import { ITransactionRepository } from '../../domain/repositories/ITransactionRepository';
 import { TRANSACTION_REPOSITORY } from '../../domain/repositories/tokens';
-
-type CreateTransactionRequest = {
-  description: string;
-  amount: number;
-  type: TransactionType;
-  userId: string;
-  categoryId: string;
-  date?: Date;
-};
+import { CreateTransactionDTO } from '../dtos/CreateTransactionDTO';
 
 @Injectable()
 export class CreateTransactionUseCase {
@@ -28,9 +20,29 @@ export class CreateTransactionUseCase {
     userId,
     categoryId,
     date,
-  }: CreateTransactionRequest): Promise<Transaction> {
+  }: CreateTransactionDTO): Promise<Transaction> {
+    if (!description?.trim()) {
+      throw new AppError('Description is required.', 400);
+    }
+
+    if (amount == null || amount <= 0) {
+      throw new AppError('Amount must be greater than zero.', 400);
+    }
+
+    if (!type) {
+      throw new AppError('Transaction type is required.', 400);
+    }
+
+    if (!userId) {
+      throw new AppError('User is required.', 400);
+    }
+
+    if (!categoryId) {
+      throw new AppError('Category is required.', 400);
+    }
+
     const transaction = new Transaction({
-      description,
+      description: description.trim(),
       amount,
       type,
       userId,
