@@ -193,6 +193,65 @@ A aplicação implementa:
 - ValidationPipe
 - Tratamento global de erros
 
+## Modelo de Dados
+
+```mermaid
+erDiagram
+
+    USER ||--o{ REFRESH_TOKEN : has
+    USER ||--o{ CATEGORY : owns
+    USER ||--o{ TRANSACTION : creates
+    CATEGORY ||--o{ TRANSACTION : classifies
+
+    USER {
+        string id PK
+        string name
+        string email UK
+        string password
+        UserRole role
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    REFRESH_TOKEN {
+        string id PK
+        string token UK
+        string userId FK
+        datetime expiresAt
+        datetime createdAt
+    }
+
+    CATEGORY {
+        string id PK
+        string name
+        string userId FK
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    TRANSACTION {
+        string id PK
+        string description
+        decimal amount
+        TransactionType type
+        datetime date
+        string userId FK
+        string categoryId FK
+        datetime createdAt
+        datetime updatedAt
+    }
+```
+
+## Regras de Relacionamento
+
+- Um usuário pode possuir várias categorias.
+- Um usuário pode possuir várias movimentações.
+- Uma categoria pode estar vinculada a várias movimentações.
+- Um usuário pode possuir vários refresh tokens.
+- Ao excluir um usuário, suas categorias, movimentações e refresh tokens são removidos em cascata.
+- Uma categoria não pode ser excluída caso existam movimentações vinculadas a ela.
+- O nome da categoria deve ser único por usuário.
+
 ## Scripts
 
 ```bash
