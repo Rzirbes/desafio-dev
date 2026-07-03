@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/Button";
 import { Transaction } from "@/types/transaction";
-import { MoreVertical } from "lucide-react";
 import { TransactionCard } from "./TransactionCard";
 
 type TransactionsListProps = {
@@ -22,13 +21,6 @@ export function TransactionsList({
   onNextPage,
   onCreateTransaction,
 }: TransactionsListProps) {
-  function formatCurrency(value: number) {
-    return value.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  }
-
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-2xl bg-white p-6 shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -63,7 +55,10 @@ export function TransactionsList({
         <>
           <div className="mt-8 grid min-w-0 gap-4">
             {transactions.map((transaction) => (
-              <TransactionCard key={transaction.id} transaction={transaction} />
+              <TransactionCard
+                key={transaction._id}
+                transaction={transaction}
+              />
             ))}
           </div>
 

@@ -1,7 +1,13 @@
 export type TransactionType = "INCOME" | "EXPENSE";
 
+export type TransactionSummary = {
+  incomeTotal: number;
+  expenseTotal: number;
+  balance: number;
+};
+
 export type Transaction = {
-  id: string;
+  _id: string;
   description: string;
   amount: number;
   type: TransactionType;
@@ -18,6 +24,7 @@ export type PaginatedTransactionsResponse = {
   page: number;
   limit: number;
   totalPages: number;
+  summary: TransactionSummary;
 };
 
 export type CreateTransactionDTO = {

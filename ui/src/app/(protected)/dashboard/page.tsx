@@ -47,15 +47,11 @@ export default function DashboardPage() {
 
   const transactions = transactionsResponse?.transactions ?? [];
 
-  const incomeTotal = transactions
-    .filter((transaction) => transaction.type === "INCOME")
-    .reduce((total, transaction) => total + transaction.amount, 0);
-
-  const expenseTotal = transactions
-    .filter((transaction) => transaction.type === "EXPENSE")
-    .reduce((total, transaction) => total + transaction.amount, 0);
-
-  const balance = incomeTotal - expenseTotal;
+  const summary = transactionsResponse?.summary ?? {
+    incomeTotal: 0,
+    expenseTotal: 0,
+    balance: 0,
+  };
 
   function handleMonthChange(month: number) {
     setMonth(month);
@@ -81,17 +77,20 @@ export default function DashboardPage() {
           <Header />
 
           <section className="grid gap-4 md:grid-cols-3">
-            <SummaryCard title="Saldo atual" value={formatCurrency(balance)} />
+            <SummaryCard
+              title="Saldo atual"
+              value={formatCurrency(summary.balance)}
+            />
 
             <SummaryCard
               title="Receitas"
-              value={formatCurrency(incomeTotal)}
+              value={formatCurrency(summary.incomeTotal)}
               valueClassName="text-green-600"
             />
 
             <SummaryCard
               title="Despesas"
-              value={formatCurrency(expenseTotal)}
+              value={formatCurrency(summary.expenseTotal)}
               valueClassName="text-red-600"
             />
           </section>
