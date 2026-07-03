@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Transaction } from "@/types/transaction";
 import { TransactionCard } from "./TransactionCard";
-import { USER_REPOSITORY } from "../../../../api/src/modules/auth/domain/repositories/tokens";
 
 type TransactionsListProps = {
   transactions: Transaction[];

@@ -14,7 +14,6 @@ export function TransactionCard({
   onEdit,
   onDelete,
 }: TransactionCardProps) {
-     console.log("TransactionsItem:", transaction);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 

@@ -51,4 +51,11 @@ export const transactionsService = {
       body: JSON.stringify(data),
     });
   },
+
+  delete(token: string, id: string) {
+    return clientFetcher<void>(`/transactions/${id}`, {
+      method: "DELETE",
+      token,
+    });
+  },
 };

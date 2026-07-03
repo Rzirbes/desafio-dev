@@ -14,7 +14,7 @@ export async function clientFetcher<T>(
     return fetch(`${API_URL}${path}`, {
       ...rest,
       headers: {
-        "Content-Type": "application/json",
+        ...(rest.body ? { "Content-Type": "application/json" } : {}),
         ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...headers,
       },
@@ -51,6 +51,10 @@ export async function clientFetcher<T>(
     localStorage.setItem("@finance:refreshToken", refreshData.refreshToken);
 
     response = await request(refreshData.accessToken);
+  }
+
+  if (response.status === 204) {
+    return undefined as T;
   }
 
   const data = await response.json().catch(() => null);

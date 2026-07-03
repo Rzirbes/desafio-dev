@@ -74,6 +74,20 @@ export default function DashboardPage() {
     });
   }
 
+  async function handleDeleteTransaction(transaction: Transaction) {
+    if (!accessToken) return;
+
+    const confirmDelete = confirm(
+      `Deseja realmente excluir "${transaction.description}"?`,
+    );
+
+    if (!confirmDelete) return;
+
+    await transactionsService.delete(accessToken, transaction._id);
+
+    mutate();
+  }
+
   return (
     <>
       <main className="min-h-screen bg-background px-4 py-8">
@@ -120,9 +134,7 @@ export default function DashboardPage() {
             onEditTransaction={(transaction) => {
               setEditingTransaction(transaction);
             }}
-            onDeleteTransaction={(transaction) => {
-              console.log("Excluir", transaction);
-            }}
+            onDeleteTransaction={handleDeleteTransaction}
           />
         </div>
       </main>
