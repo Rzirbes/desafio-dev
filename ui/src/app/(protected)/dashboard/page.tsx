@@ -9,6 +9,7 @@ import { CreateTransactionModal } from "@/components/transactions/CreateTransact
 import { useAuth } from "@/hooks/useAuth";
 import { categoriesService } from "@/services/categories/categoriesService";
 import { transactionsService } from "@/services/transactions/transactionsService";
+import { SummaryCard } from "@/components/dashboard/SummaryCard";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -55,26 +56,19 @@ export default function DashboardPage() {
           <Header />
 
           <section className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <p className="text-sm text-foreground-secondary">Saldo atual</p>
-              <strong className="mt-2 block text-2xl text-foreground">
-                {formatCurrency(balance)}
-              </strong>
-            </div>
+            <SummaryCard title="Saldo atual" value={formatCurrency(balance)} />
 
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <p className="text-sm text-foreground-secondary">Receitas</p>
-              <strong className="mt-2 block text-2xl text-green-600">
-                {formatCurrency(incomeTotal)}
-              </strong>
-            </div>
+            <SummaryCard
+              title="Receitas"
+              value={formatCurrency(incomeTotal)}
+              valueClassName="text-green-600"
+            />
 
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <p className="text-sm text-foreground-secondary">Despesas</p>
-              <strong className="mt-2 block text-2xl text-red-600">
-                {formatCurrency(expenseTotal)}
-              </strong>
-            </div>
+            <SummaryCard
+              title="Despesas"
+              value={formatCurrency(expenseTotal)}
+              valueClassName="text-red-600"
+            />
           </section>
 
           <section className="rounded-2xl bg-white p-6 shadow-sm">
@@ -129,7 +123,7 @@ export default function DashboardPage() {
                           key={transaction._id}
                           className="border-t border-border"
                         >
-                          <td className="px-4 py-3 text-foreground">
+                          <td className="px-4 py-3 text-foreground-secondary">
                             {transaction.description}
                           </td>
 
