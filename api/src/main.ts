@@ -20,9 +20,10 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, swaggerDocument);
 
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
-
   await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
 }
 bootstrap().catch((error: unknown) => {

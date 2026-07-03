@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Transaction } from "@/types/transaction";
 import { TransactionCard } from "./TransactionCard";
+import { USER_REPOSITORY } from "../../../../api/src/modules/auth/domain/repositories/tokens";
 
 type TransactionsListProps = {
   transactions: Transaction[];
@@ -10,6 +11,8 @@ type TransactionsListProps = {
   onPreviousPage: () => void;
   onNextPage: () => void;
   onCreateTransaction: () => void;
+  onEditTransaction: (transaction: Transaction) => void;
+  onDeleteTransaction: (transaction: Transaction) => void;
 };
 
 export function TransactionsList({
@@ -20,6 +23,8 @@ export function TransactionsList({
   onPreviousPage,
   onNextPage,
   onCreateTransaction,
+  onEditTransaction,
+  onDeleteTransaction,
 }: TransactionsListProps) {
   return (
     <section className="w-full min-w-0 overflow-hidden rounded-2xl bg-white p-6 shadow-sm">
@@ -58,6 +63,8 @@ export function TransactionsList({
               <TransactionCard
                 key={transaction._id}
                 transaction={transaction}
+                onEdit={onEditTransaction}
+                onDelete={onDeleteTransaction}
               />
             ))}
           </div>

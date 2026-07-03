@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/Button";
@@ -11,7 +11,7 @@ import { Label } from "../ui/Label";
 import { CreateCategoryModal } from "../categories/CreateCategoryModal";
 import { useAuth } from "@/hooks/useAuth";
 import { transactionsService } from "@/services/transactions/transactionsService";
-import { TransactionType } from "@/types/transaction";
+import { Transaction, TransactionType } from "@/types/transaction";
 import { DatePicker } from "../ui/DatePicker";
 
 type CreateTransactionModalProps = {
@@ -19,6 +19,8 @@ type CreateTransactionModalProps = {
   onClose: () => void;
   categories: Category[];
   onTransactionCreated: () => void;
+  transaction?: Transaction | null;
+  onSuccess?: () => void;
 };
 
 export function CreateTransactionModal({
@@ -26,6 +28,8 @@ export function CreateTransactionModal({
   onClose,
   categories,
   onTransactionCreated,
+  transaction,
+  onSuccess,
 }: CreateTransactionModalProps) {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -36,7 +40,28 @@ export function CreateTransactionModal({
   const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] =
     useState(false);
 
+  const isEditing = !!transaction;
+
   const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (transaction) {
+      setDescription(transaction.description);
+      setAmount(String(transaction.amount));
+      setType(transaction.type);
+      setCategoryId(transaction.categoryId);
+      setDate(new Date(transaction.date));
+      return;
+    }
+
+    setDescription("");
+    setAmount("");
+    setType("EXPENSE");
+    setCategoryId("");
+    setDate(new Date());
+  }, [isOpen, transaction]);
 
   if (!isOpen) {
     return null;
@@ -45,43 +70,59 @@ export function CreateTransactionModal({
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!accessToken) {
+    if (!accessToken) return;
+
+    if (
+      !description.trim() ||
+      !amount.trim() ||
+      !type ||
+      !categoryId ||
+      !date
+    ) {
+      toast.error("Preencha todos os campos.");
       return;
     }
 
     setIsLoading(true);
 
+    setIsLoading(true);
+
     try {
-      await transactionsService.create(accessToken, {
+      const payload = {
         description,
         amount: Number(amount),
         type,
         categoryId,
         date: date.toISOString(),
-      });
+      };
 
-      await onTransactionCreated();
+      if (isEditing && transaction) {
+        await transactionsService.update(accessToken, transaction._id, payload);
 
-      toast.success("Transação cadastrada com sucesso!");
+        toast.success("Transação atualizada com sucesso!");
+        onSuccess?.();
+      } else {
+        await transactionsService.create(accessToken, payload);
 
-      setDescription("");
-      setAmount("");
-      setType("EXPENSE");
-      setCategoryId("");
-      setDate(new Date());
+        toast.success("Transação cadastrada com sucesso!");
+        await onTransactionCreated();
+      }
 
       onClose();
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Não foi possível cadastrar a transação.",
+          : isEditing
+            ? "Não foi possível atualizar a transação."
+            : "Não foi possível cadastrar a transação.",
       );
     } finally {
       setIsLoading(false);
     }
   }
-
+  console.log("categories:", categories);
+  console.log("categoryId atual:", categoryId);
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">

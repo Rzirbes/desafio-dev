@@ -12,6 +12,7 @@ import { transactionsService } from "@/services/transactions/transactionsService
 import { SummaryCard } from "@/components/dashboard/SummaryCard";
 import { TransactionsList } from "@/components/dashboard/TransactionsList";
 import { TransactionsFilters } from "@/components/dashboard/TransactionsFilters";
+import { Transaction } from "@/types/transaction";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -24,6 +25,8 @@ export default function DashboardPage() {
 
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const [editingTransaction, setEditingTransaction] =
+    useState<Transaction | null>(null);
 
   const { data: categories = [] } = useSWR(
     accessToken ? "/categories" : null,
@@ -109,16 +112,33 @@ export default function DashboardPage() {
             totalPages={transactionsResponse?.totalPages ?? 1}
             onPreviousPage={() => setPage((currentPage) => currentPage - 1)}
             onNextPage={() => setPage((currentPage) => currentPage + 1)}
-            onCreateTransaction={() => setIsCreateTransactionModalOpen(true)}
+            onCreateTransaction={() => {
+              setEditingTransaction(null);
+              setIsCreateTransactionModalOpen(true);
+            }}
+            onEditTransaction={(transaction) => {
+              console.log("page.tsx -> edit recebido:", transaction);
+              console.log("id recebido:", transaction._id);
+              setEditingTransaction(transaction);
+              setIsCreateTransactionModalOpen(true);
+            }}
+            onDeleteTransaction={(transaction) => {
+              console.log("Excluir", transaction);
+            }}
           />
         </div>
       </main>
 
       <CreateTransactionModal
         isOpen={isCreateTransactionModalOpen}
-        onClose={() => setIsCreateTransactionModalOpen(false)}
+        onClose={() => {
+          setIsCreateTransactionModalOpen(false);
+          setEditingTransaction(null);
+        }}
         categories={categories}
+        transaction={editingTransaction}
         onTransactionCreated={mutate}
+        onSuccess={mutate}
       />
     </>
   );

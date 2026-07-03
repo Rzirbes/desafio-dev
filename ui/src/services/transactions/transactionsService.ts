@@ -3,6 +3,8 @@ import {
   CreateTransactionDTO,
   CreateTransactionResponse,
   PaginatedTransactionsResponse,
+  UpdateTransactionDTO,
+  UpdateTransactionResponse,
 } from "@/types/transaction";
 
 type ListParams = {
@@ -37,6 +39,14 @@ export const transactionsService = {
   create(token: string, data: CreateTransactionDTO) {
     return clientFetcher<CreateTransactionResponse>("/transactions", {
       method: "POST",
+      token,
+      body: JSON.stringify(data),
+    });
+  },
+
+  update(token: string, id: string, data: UpdateTransactionDTO) {
+    return clientFetcher<UpdateTransactionResponse>(`/transactions/${id}`, {
+      method: "PUT",
       token,
       body: JSON.stringify(data),
     });

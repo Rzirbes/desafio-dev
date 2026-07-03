@@ -38,3 +38,9 @@ export type CreateTransactionDTO = {
 export type CreateTransactionResponse = {
   transaction: Transaction;
 };
+
+export type UpdateTransactionDTO = Partial<CreateTransactionDTO>;
+
+export type UpdateTransactionResponse = {
+  transaction: Transaction;
+};
