@@ -118,8 +118,6 @@ export default function DashboardPage() {
               setIsCreateTransactionModalOpen(true);
             }}
             onEditTransaction={(transaction) => {
-              console.log("page.tsx -> edit recebido:", transaction);
-              console.log("id recebido:", transaction._id);
               setEditingTransaction(transaction);
               setIsCreateTransactionModalOpen(true);
             }}
