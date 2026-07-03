@@ -46,8 +46,16 @@ export function TransactionCard({
             {transaction.description}
           </h3>
 
+          {transaction.category && (
+            <span className="mt-1 inline-block text-sm text-foreground-secondary">
+              {transaction.category.name}
+            </span>
+          )}
+        </div>
+
+        <div className="shrink-0">
           <span
-            className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
               isIncome
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
@@ -55,11 +63,6 @@ export function TransactionCard({
           >
             {isIncome ? "Receita" : "Despesa"}
           </span>
-          {transaction.category && (
-            <span className="inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700">
-              {transaction.category.name}
-            </span>
-          )}
         </div>
 
         <div className="w-[120px] shrink-0 text-right">
