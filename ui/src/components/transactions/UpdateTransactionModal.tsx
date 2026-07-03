@@ -39,12 +39,15 @@ export function UpdateTransactionModal({
   useEffect(() => {
     if (!isOpen || !transaction) return;
 
+    console.log("transaction.categoryId:", transaction.categoryId);
+    console.log("categories:", categories);
+
     setDescription(transaction.description);
     setAmount(String(transaction.amount));
     setType(transaction.type);
     setCategoryId(transaction.categoryId);
     setDate(new Date(transaction.date));
-  }, [isOpen, transaction]);
+  }, [isOpen, transaction, categories]);
 
   if (!isOpen || !transaction) return null;
 

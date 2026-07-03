@@ -119,7 +119,6 @@ export default function DashboardPage() {
             }}
             onEditTransaction={(transaction) => {
               setEditingTransaction(transaction);
-              setIsCreateTransactionModalOpen(true);
             }}
             onDeleteTransaction={(transaction) => {
               console.log("Excluir", transaction);

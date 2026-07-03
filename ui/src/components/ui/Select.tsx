@@ -26,6 +26,8 @@ export function Select({
   disabled,
   className,
 }: SelectProps) {
+  const selectedLabel = options.find((option) => option.value === value)?.label;
+
   return (
     <SelectPrimitive.Root
       value={value}
@@ -49,7 +51,7 @@ export function Select({
           className,
         )}
       >
-        <SelectPrimitive.Value placeholder={placeholder} />
+        <span>{selectedLabel ?? placeholder}</span>
 
         <SelectPrimitive.Icon>
           <ChevronDown className="h-4 w-4 opacity-70" />
