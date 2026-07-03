@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Transaction } from "@/types/transaction";
+import { MoreVertical } from "lucide-react";
 
 type TransactionsListProps = {
   transactions: Transaction[];
@@ -59,52 +60,75 @@ export function TransactionsList({
 
       {!isLoading && transactions.length > 0 && (
         <>
-          <div className="mt-8 overflow-hidden rounded-xl border border-border">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-background-secondary text-foreground-secondary">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Descrição</th>
-                  <th className="px-4 py-3 font-medium">Tipo</th>
-                  <th className="px-4 py-3 font-medium">Valor</th>
-                  <th className="px-4 py-3 font-medium">Data</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {transactions.map((transaction) => (
-                  <tr key={transaction.id} className="border-t border-border">
-                    <td className="px-4 py-3 text-foreground-secondary">
+          <div className="mt-8 grid gap-4">
+            {transactions.map((transaction) => (
+              <div
+                key={transaction.id}
+                className="
+    rounded-2xl
+    border border-black/10
+    bg-slate-50
+    px-5
+    py-4
+    transition-all
+    hover:shadow-md
+  "
+              >
+                <div className="flex items-center justify-between">
+                  {/* Esquerda */}
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-black">
                       {transaction.description}
-                    </td>
+                    </h3>
 
-                    <td className="px-4 py-3">
-                      {transaction.type === "INCOME" ? (
-                        <span className="text-green-600">Receita</span>
-                      ) : (
-                        <span className="text-red-600">Despesa</span>
-                      )}
-                    </td>
+                    <span
+                      className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                        transaction.type === "INCOME"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {transaction.type === "INCOME" ? "Receita" : "Despesa"}
+                    </span>
+                  </div>
 
-                    <td
-                      className={`px-4 py-3 font-medium ${
+                  {/* Centro */}
+                  <div className="flex flex-1 flex-col items-center">
+                    <span
+                      className={`text-lg font-bold ${
                         transaction.type === "INCOME"
                           ? "text-green-600"
                           : "text-red-600"
                       }`}
                     >
+                      {transaction.type === "INCOME" ? "+" : "-"}
                       {formatCurrency(transaction.amount)}
-                    </td>
+                    </span>
 
-                    <td className="px-4 py-3 text-foreground-secondary">
+                    <span className="mt-1 text-sm text-foreground-secondary">
                       {new Date(transaction.date).toLocaleDateString("pt-BR")}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </span>
+                  </div>
+
+                  {/* Direita */}
+                  <button
+                    className="
+        rounded-lg
+        p-2
+        text-foreground-secondary
+        transition-colors
+        hover:bg-slate-200
+        hover:text-foreground
+      "
+                  >
+                    <MoreVertical size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-6 flex items-center justify-between">
             <p className="text-sm text-foreground-secondary">
               Página {page} de {totalPages}
             </p>
