@@ -34,6 +34,13 @@ export class RefreshTokenUseCase {
     const refreshTokenExists =
       await this.refreshTokenRepository.findByToken(refreshToken);
 
+    const jwtSecret = process.env.JWT_SECRET;
+    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
+
+    if (!jwtSecret || !jwtRefreshSecret) {
+      throw new AppError('JWT configuration is missing.', 500);
+    }
+
     if (!refreshTokenExists) {
       throw new AppError('Refresh token does not exist', 401);
     }
@@ -45,10 +52,7 @@ export class RefreshTokenUseCase {
     let decoded: TokenPayload;
 
     try {
-      decoded = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET as Secret,
-      ) as TokenPayload;
+      decoded = jwt.verify(refreshToken, jwtRefreshSecret) as TokenPayload;
     } catch {
       throw new AppError('Invalid refresh token', 401);
     }
@@ -59,19 +63,15 @@ export class RefreshTokenUseCase {
       throw new AppError('Invalid refresh token', 401);
     }
 
-    const accessToken = jwt.sign({}, process.env.JWT_SECRET as Secret, {
+    const accessToken = jwt.sign({}, jwtSecret as Secret, {
       subject: userId,
       expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as StringValue,
     });
 
-    const newRefreshToken = jwt.sign(
-      {},
-      process.env.JWT_REFRESH_SECRET as Secret,
-      {
-        subject: userId,
-        expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as StringValue,
-      },
-    );
+    const newRefreshToken = jwt.sign({}, jwtRefreshSecret as Secret, {
+      subject: userId,
+      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as StringValue,
+    });
 
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
