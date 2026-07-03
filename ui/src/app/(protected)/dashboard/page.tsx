@@ -125,6 +125,8 @@ export default function DashboardPage() {
             isLoading={isLoading}
             page={transactionsResponse?.page ?? page}
             totalPages={transactionsResponse?.totalPages ?? 1}
+            totalItems={transactionsResponse?.total ?? 0}
+            itemsOnPage={transactions.length}
             onPreviousPage={() => setPage((currentPage) => currentPage - 1)}
             onNextPage={() => setPage((currentPage) => currentPage + 1)}
             onCreateTransaction={() => {

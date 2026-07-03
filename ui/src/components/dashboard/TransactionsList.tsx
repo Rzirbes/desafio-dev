@@ -7,6 +7,8 @@ type TransactionsListProps = {
   isLoading: boolean;
   page: number;
   totalPages: number;
+  totalItems: number;
+  itemsOnPage: number;
   onPreviousPage: () => void;
   onNextPage: () => void;
   onCreateTransaction: () => void;
@@ -19,6 +21,8 @@ export function TransactionsList({
   isLoading,
   page,
   totalPages,
+  totalItems,
+  itemsOnPage,
   onPreviousPage,
   onNextPage,
   onCreateTransaction,
@@ -70,7 +74,8 @@ export function TransactionsList({
 
           <div className="mt-6 flex items-center justify-between">
             <p className="text-sm text-foreground-secondary">
-              Página {page} de {totalPages}
+              Página {page} de {totalPages} • Exibindo {itemsOnPage} de{" "}
+              {totalItems} transações
             </p>
 
             <div className="flex gap-2">
