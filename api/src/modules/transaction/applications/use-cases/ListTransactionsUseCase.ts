@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { TRANSACTION_REPOSITORY } from '../../domain/repositories/tokens';
 import {
   ITransactionRepository,
@@ -9,6 +10,8 @@ type ListTransactionsRequest = {
   userId: string;
   page: number;
   limit: number;
+  month?: number;
+  year?: number;
 };
 
 @Injectable()
@@ -22,11 +25,15 @@ export class ListTransactionsUseCase {
     userId,
     page,
     limit,
+    month,
+    year,
   }: ListTransactionsRequest): Promise<PaginatedTransactions> {
     return this.transactionRepository.findManyByUserId({
       userId,
       page,
       limit,
+      month,
+      year,
     });
   }
 }
