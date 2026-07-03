@@ -86,7 +86,7 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       };
     }
 
-    const [transactions, total] = await prisma.$transaction([
+    const [transactions, total, summary] = await prisma.$transaction([
       prisma.transaction.findMany({
         where,
         include: {
@@ -102,7 +102,26 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       prisma.transaction.count({
         where,
       }),
+
+      prisma.transaction.groupBy({
+        by: ['type'],
+        where,
+        orderBy: {
+          type: 'asc',
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
     ]);
+
+    const incomeSummary = summary.find((item) => item.type === 'INCOME');
+    const expenseSummary = summary.find((item) => item.type === 'EXPENSE');
+
+    const incomeTotal = Number(incomeSummary?._sum?.amount ?? 0);
+    const expenseTotal = Number(expenseSummary?._sum?.amount ?? 0);
+
+    const balance = incomeTotal - expenseTotal;
 
     return {
       transactions: transactions.map(
@@ -125,6 +144,11 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       page,
       limit,
       totalPages: Math.ceil(total / limit),
+      summary: {
+        incomeTotal: Number(incomeTotal),
+        expenseTotal: Number(expenseTotal),
+        balance,
+      },
     };
   }
 

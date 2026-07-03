@@ -14,6 +14,11 @@ export type PaginatedTransactions = {
   page: number;
   limit: number;
   totalPages: number;
+  summary: {
+    incomeTotal: number;
+    expenseTotal: number;
+    balance: number;
+  };
 };
 
 export interface ITransactionRepository {
