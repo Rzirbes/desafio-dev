@@ -11,6 +11,7 @@ import { categoriesService } from "@/services/categories/categoriesService";
 import { transactionsService } from "@/services/transactions/transactionsService";
 import { SummaryCard } from "@/components/dashboard/SummaryCard";
 import { TransactionsList } from "@/components/dashboard/TransactionsList";
+import { TransactionsFilters } from "@/components/dashboard/TransactionsFilters";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -21,6 +22,9 @@ export default function DashboardPage() {
   const [page, setPage] = useState(1);
   const limit = 10;
 
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+
   const { data: categories = [] } = useSWR(
     accessToken ? "/categories" : null,
     () => categoriesService.list(accessToken!),
@@ -30,8 +34,15 @@ export default function DashboardPage() {
     data: transactionsResponse,
     isLoading,
     mutate,
-  } = useSWR(accessToken ? [`/transactions`, page, limit] : null, () =>
-    transactionsService.list(accessToken!, { page, limit }),
+  } = useSWR(
+    accessToken ? ["/transactions", page, limit, month, year] : null,
+    () =>
+      transactionsService.list(accessToken!, {
+        page,
+        limit,
+        month,
+        year,
+      }),
   );
 
   const transactions = transactionsResponse?.transactions ?? [];
@@ -45,6 +56,16 @@ export default function DashboardPage() {
     .reduce((total, transaction) => total + transaction.amount, 0);
 
   const balance = incomeTotal - expenseTotal;
+
+  function handleMonthChange(month: number) {
+    setMonth(month);
+    setPage(1);
+  }
+
+  function handleYearChange(year: number) {
+    setYear(year);
+    setPage(1);
+  }
 
   function formatCurrency(value: number) {
     return value.toLocaleString("pt-BR", {
@@ -74,6 +95,13 @@ export default function DashboardPage() {
               valueClassName="text-red-600"
             />
           </section>
+
+          <TransactionsFilters
+            month={month}
+            year={year}
+            onMonthChange={handleMonthChange}
+            onYearChange={handleYearChange}
+          />
 
           <TransactionsList
             transactions={transactions}
