@@ -1,7 +1,9 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+
 import { Category } from '../../domain/entities/Category';
 import type { ICategoryRepository } from '../../domain/repositories/ICategoryRepository';
 import { CATEGORY_REPOSITORY } from '../../domain/repositories/tokens';
+import { AppError } from '../../../../shared/infra/http/errors/AppError';
 
 type CreateCategoryUseCaseRequest = {
   name: string;
@@ -23,7 +25,7 @@ export class CreateCategoryUseCase {
       await this.categoryRepository.findByNameAndUserId(name, userId);
 
     if (categoryAlreadyExists) {
-      throw new ConflictException('Category already exists.');
+      throw new AppError('Category already exists.', 409);
     }
 
     const category = new Category({

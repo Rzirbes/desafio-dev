@@ -36,7 +36,7 @@ export class DeleteCategoryUseCase {
 
     if (hasTransactions) {
       throw new AppError(
-        'Não é possível excluir uma categoria que possui transações vinculadas.',
+        'Category cannot be deleted because it has linked transactions.',
         400,
       );
     }
