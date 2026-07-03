@@ -30,6 +30,8 @@ export interface ITransactionRepository {
     params: FindManyByUserIdParams,
   ): Promise<PaginatedTransactions>;
 
+  existsByCategoryId(categoryId: string): Promise<boolean>;
+
   update(transaction: Transaction): Promise<Transaction>;
 
   delete(id: string): Promise<void>;

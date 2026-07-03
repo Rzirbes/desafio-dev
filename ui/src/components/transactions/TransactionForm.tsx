@@ -109,7 +109,7 @@ export function TransactionForm({
             className="w-auto px-4"
             onClick={onCreateCategory}
           >
-            Nova
+            Editar Categorias
           </Button>
         </div>
       </div>

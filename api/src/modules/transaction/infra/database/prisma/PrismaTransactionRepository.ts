@@ -181,6 +181,19 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     );
   }
 
+  async existsByCategoryId(categoryId: string): Promise<boolean> {
+    const transaction = await prisma.transaction.findFirst({
+      where: {
+        categoryId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return !!transaction;
+  }
+
   async delete(id: string): Promise<void> {
     await prisma.transaction.delete({
       where: { id },

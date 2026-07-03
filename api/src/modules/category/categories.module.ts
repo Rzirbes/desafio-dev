@@ -12,6 +12,9 @@ import { GetCategoryByIdUseCase } from './applications/use-cases/GetCategoryById
 import { DeleteCategoryUseCase } from './applications/use-cases/DeleteCategoryUseCase';
 import { DeleteCategoryController } from './infra/http/controllers/DeleteCategoryController';
 
+import { TRANSACTION_REPOSITORY } from '../transaction/domain/repositories/tokens';
+import { PrismaTransactionRepository } from '../transaction/infra/database/prisma/PrismaTransactionRepository';
+
 @Module({
   controllers: [
     CreateCategoryController,
@@ -29,6 +32,10 @@ import { DeleteCategoryController } from './infra/http/controllers/DeleteCategor
     {
       provide: CATEGORY_REPOSITORY,
       useClass: PrismaCategoryRepository,
+    },
+    {
+      provide: TRANSACTION_REPOSITORY,
+      useClass: PrismaTransactionRepository,
     },
   ],
 })

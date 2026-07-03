@@ -7,8 +7,8 @@ import { Category } from "@/types/category";
 import { TransactionType } from "@/types/transaction";
 import { useAuth } from "@/hooks/useAuth";
 import { transactionsService } from "@/services/transactions/transactionsService";
-import { CreateCategoryModal } from "../categories/CreateCategoryModal";
 import { TransactionForm } from "./TransactionForm";
+import { ManageCategoriesModal } from "../categories/ManageCategoriesModal";
 
 type CreateTransactionModalProps = {
   isOpen: boolean;
@@ -122,10 +122,11 @@ export function CreateTransactionModal({
         </div>
       </div>
 
-      <CreateCategoryModal
+      <ManageCategoriesModal
         isOpen={isCreateCategoryModalOpen}
         onClose={() => setIsCreateCategoryModalOpen(false)}
         token={accessToken}
+        categories={categories}
       />
     </>
   );
