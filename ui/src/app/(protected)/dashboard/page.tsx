@@ -26,9 +26,12 @@ export default function DashboardPage() {
     () => categoriesService.list(accessToken!),
   );
 
-  const { data: transactionsResponse, isLoading } = useSWR(
-    accessToken ? [`/transactions`, page, limit] : null,
-    () => transactionsService.list(accessToken!, { page, limit }),
+  const {
+    data: transactionsResponse,
+    isLoading,
+    mutate,
+  } = useSWR(accessToken ? [`/transactions`, page, limit] : null, () =>
+    transactionsService.list(accessToken!, { page, limit }),
   );
 
   const transactions = transactionsResponse?.transactions ?? [];
@@ -88,6 +91,7 @@ export default function DashboardPage() {
         isOpen={isCreateTransactionModalOpen}
         onClose={() => setIsCreateTransactionModalOpen(false)}
         categories={categories}
+        onTransactionCreated={mutate}
       />
     </>
   );

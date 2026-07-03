@@ -1,5 +1,9 @@
 import { clientFetcher } from "@/services/clientFetcher";
-import { PaginatedTransactionsResponse } from "@/types/transaction";
+import {
+  CreateTransactionDTO,
+  CreateTransactionResponse,
+  PaginatedTransactionsResponse,
+} from "@/types/transaction";
 
 type ListParams = {
   page?: number;
@@ -17,5 +21,12 @@ export const transactionsService = {
         token,
       },
     );
+  },
+  create(token: string, data: CreateTransactionDTO) {
+    return clientFetcher<CreateTransactionResponse>("/transactions", {
+      method: "POST",
+      token,
+      body: JSON.stringify(data),
+    });
   },
 };

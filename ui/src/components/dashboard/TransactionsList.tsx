@@ -72,7 +72,7 @@ export function TransactionsList({
 
               <tbody>
                 {transactions.map((transaction) => (
-                  <tr key={transaction._id} className="border-t border-border">
+                  <tr key={transaction.id} className="border-t border-border">
                     <td className="px-4 py-3 text-foreground-secondary">
                       {transaction.description}
                     </td>
