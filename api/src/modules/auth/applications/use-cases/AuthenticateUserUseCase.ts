@@ -44,6 +44,13 @@ export class AuthenticateUserUseCase {
   }: AuthenticateUserRequest): Promise<AuthenticateUserResponse> {
     const user = await this.userRepository.findByEmail(email);
 
+    const jwtSecret = process.env.JWT_SECRET;
+    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
+
+    if (!jwtSecret || !jwtRefreshSecret) {
+      throw new AppError('JWT configuration is missing.', 500);
+    }
+
     if (!user) {
       throw new AppError('Invalid credentials', 401);
     }
@@ -56,21 +63,17 @@ export class AuthenticateUserUseCase {
 
     const accessToken = jwt.sign(
       { email: user.email, role: user.role },
-      process.env.JWT_SECRET as Secret,
+      jwtSecret as Secret,
       {
         subject: user.id,
         expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as StringValue,
       },
     );
 
-    const refreshToken = jwt.sign(
-      {},
-      process.env.JWT_REFRESH_SECRET as Secret,
-      {
-        subject: user.id,
-        expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as StringValue,
-      },
-    );
+    const refreshToken = jwt.sign({}, jwtRefreshSecret as Secret, {
+      subject: user.id,
+      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as StringValue,
+    });
 
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
