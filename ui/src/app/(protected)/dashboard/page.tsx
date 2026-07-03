@@ -13,6 +13,7 @@ import { SummaryCard } from "@/components/dashboard/SummaryCard";
 import { TransactionsList } from "@/components/dashboard/TransactionsList";
 import { TransactionsFilters } from "@/components/dashboard/TransactionsFilters";
 import { Transaction } from "@/types/transaction";
+import { UpdateTransactionModal } from "@/components/transactions/UpdateTransactionModal";
 
 export default function DashboardPage() {
   const { accessToken } = useAuth();
@@ -136,8 +137,14 @@ export default function DashboardPage() {
           setEditingTransaction(null);
         }}
         categories={categories}
-        transaction={editingTransaction}
         onTransactionCreated={mutate}
+      />
+
+      <UpdateTransactionModal
+        isOpen={!!editingTransaction}
+        onClose={() => setEditingTransaction(null)}
+        categories={categories}
+        transaction={editingTransaction}
         onSuccess={mutate}
       />
     </>

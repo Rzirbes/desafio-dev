@@ -1,28 +1,30 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Category } from "@/types/category";
-import { TransactionType } from "@/types/transaction";
+import { Transaction, TransactionType } from "@/types/transaction";
 import { useAuth } from "@/hooks/useAuth";
 import { transactionsService } from "@/services/transactions/transactionsService";
 import { CreateCategoryModal } from "../categories/CreateCategoryModal";
 import { TransactionForm } from "./TransactionForm";
 
-type CreateTransactionModalProps = {
+type UpdateTransactionModalProps = {
   isOpen: boolean;
   onClose: () => void;
   categories: Category[];
-  onTransactionCreated: () => void;
+  transaction: Transaction | null;
+  onSuccess: () => void;
 };
 
-export function CreateTransactionModal({
+export function UpdateTransactionModal({
   isOpen,
   onClose,
   categories,
-  onTransactionCreated,
-}: CreateTransactionModalProps) {
+  transaction,
+  onSuccess,
+}: UpdateTransactionModalProps) {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<TransactionType>("EXPENSE");
@@ -34,7 +36,17 @@ export function CreateTransactionModal({
 
   const { accessToken } = useAuth();
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen || !transaction) return;
+
+    setDescription(transaction.description);
+    setAmount(String(transaction.amount));
+    setType(transaction.type);
+    setCategoryId(transaction.categoryId);
+    setDate(new Date(transaction.date));
+  }, [isOpen, transaction]);
+
+  if (!isOpen || !transaction) return null;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,7 +67,7 @@ export function CreateTransactionModal({
     setIsLoading(true);
 
     try {
-      await transactionsService.create(accessToken, {
+      await transactionsService.update(accessToken, transaction!._id, {
         description,
         amount: Number(amount),
         type,
@@ -63,21 +75,14 @@ export function CreateTransactionModal({
         date: date.toISOString(),
       });
 
-      toast.success("Transação cadastrada com sucesso!");
-      await onTransactionCreated();
-
-      setDescription("");
-      setAmount("");
-      setType("EXPENSE");
-      setCategoryId("");
-      setDate(new Date());
-
+      toast.success("Transação atualizada com sucesso!");
+      onSuccess();
       onClose();
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Não foi possível cadastrar a transação.",
+          : "Não foi possível atualizar a transação.",
       );
     } finally {
       setIsLoading(false);
@@ -89,7 +94,9 @@ export function CreateTransactionModal({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
         <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-black">Nova transação</h2>
+            <h2 className="text-xl font-semibold text-black">
+              Editar transação
+            </h2>
 
             <button
               type="button"
@@ -108,8 +115,8 @@ export function CreateTransactionModal({
             date={date}
             categories={categories}
             isLoading={isLoading}
-            submitLabel="Cadastrar"
-            loadingLabel="Cadastrando..."
+            submitLabel="Salvar"
+            loadingLabel="Salvando..."
             onDescriptionChange={setDescription}
             onAmountChange={setAmount}
             onTypeChange={setType}
