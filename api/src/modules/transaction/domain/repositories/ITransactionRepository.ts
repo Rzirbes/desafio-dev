@@ -1,11 +1,27 @@
 import { Transaction } from '../entities/Transaction';
 
+export type FindManyByUserIdParams = {
+  userId: string;
+  page: number;
+  limit: number;
+};
+
+export type PaginatedTransactions = {
+  transactions: Transaction[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
 export interface ITransactionRepository {
   create(transaction: Transaction): Promise<Transaction>;
 
   findById(id: string): Promise<Transaction | null>;
 
-  findManyByUserId(userId: string): Promise<Transaction[]>;
+  findManyByUserId(
+    params: FindManyByUserIdParams,
+  ): Promise<PaginatedTransactions>;
 
   update(transaction: Transaction): Promise<Transaction>;
 

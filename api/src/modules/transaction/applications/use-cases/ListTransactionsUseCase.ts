@@ -1,10 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TRANSACTION_REPOSITORY } from '../../domain/repositories/tokens';
-import { ITransactionRepository } from '../../domain/repositories/ITransactionRepository';
-import { Transaction } from '../../domain/entities/Transaction';
+import {
+  ITransactionRepository,
+  PaginatedTransactions,
+} from '../../domain/repositories/ITransactionRepository';
 
 type ListTransactionsRequest = {
   userId: string;
+  page: number;
+  limit: number;
 };
 
 @Injectable()
@@ -14,7 +18,15 @@ export class ListTransactionsUseCase {
     private readonly transactionRepository: ITransactionRepository,
   ) {}
 
-  async execute({ userId }: ListTransactionsRequest): Promise<Transaction[]> {
-    return this.transactionRepository.findManyByUserId(userId);
+  async execute({
+    userId,
+    page,
+    limit,
+  }: ListTransactionsRequest): Promise<PaginatedTransactions> {
+    return this.transactionRepository.findManyByUserId({
+      userId,
+      page,
+      limit,
+    });
   }
 }

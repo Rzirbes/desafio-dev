@@ -1,4 +1,8 @@
-import { ITransactionRepository } from '../../../domain/repositories/ITransactionRepository';
+import {
+  FindManyByUserIdParams,
+  ITransactionRepository,
+  PaginatedTransactions,
+} from '../../../domain/repositories/ITransactionRepository';
 import { Transaction } from '../../../domain/entities/Transaction';
 import { prisma } from '../../../../auth/infra/database/prisma/client';
 import { TransactionType } from '../../../domain/enums/TransactionType';
@@ -56,33 +60,53 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     );
   }
 
-  async findManyByUserId(userId: string): Promise<Transaction[]> {
-    const transactions = await prisma.transaction.findMany({
-      where: { userId },
-      include: {
-        category: true,
-      },
-      orderBy: {
-        date: 'desc',
-      },
-    });
+  async findManyByUserId({
+    userId,
+    page,
+    limit,
+  }: FindManyByUserIdParams): Promise<PaginatedTransactions> {
+    const skip = (page - 1) * limit;
 
-    return transactions.map(
-      (transaction) =>
-        new Transaction(
-          {
-            description: transaction.description,
-            amount: Number(transaction.amount),
-            type: transaction.type as TransactionType,
-            date: transaction.date,
-            userId: transaction.userId,
-            categoryId: transaction.categoryId,
-            createdAt: transaction.createdAt,
-            updatedAt: transaction.updatedAt,
-          },
-          transaction.id,
-        ),
-    );
+    const [transactions, total] = await prisma.$transaction([
+      prisma.transaction.findMany({
+        where: { userId },
+        include: {
+          category: true,
+        },
+        orderBy: {
+          date: 'desc',
+        },
+        skip,
+        take: limit,
+      }),
+
+      prisma.transaction.count({
+        where: { userId },
+      }),
+    ]);
+
+    return {
+      transactions: transactions.map(
+        (transaction) =>
+          new Transaction(
+            {
+              description: transaction.description,
+              amount: Number(transaction.amount),
+              type: transaction.type as TransactionType,
+              date: transaction.date,
+              userId: transaction.userId,
+              categoryId: transaction.categoryId,
+              createdAt: transaction.createdAt,
+              updatedAt: transaction.updatedAt,
+            },
+            transaction.id,
+          ),
+      ),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async update(transaction: Transaction): Promise<Transaction> {
