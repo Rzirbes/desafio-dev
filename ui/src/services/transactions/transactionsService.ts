@@ -12,6 +12,7 @@ type ListParams = {
   limit?: number;
   month?: number;
   year?: number;
+  categoryId?: string;
 };
 
 export const transactionsService = {
@@ -29,6 +30,10 @@ export const transactionsService = {
       searchParams.set("year", String(params.year));
     }
 
+    if (params.categoryId) {
+      searchParams.set("categoryId", params.categoryId);
+    }
+
     return clientFetcher<PaginatedTransactionsResponse>(
       `/transactions?${searchParams.toString()}`,
       {
@@ -36,6 +41,7 @@ export const transactionsService = {
       },
     );
   },
+
   create(token: string, data: CreateTransactionDTO) {
     return clientFetcher<CreateTransactionResponse>("/transactions", {
       method: "POST",

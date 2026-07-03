@@ -33,19 +33,23 @@ export default function DashboardPage() {
     accessToken ? "/categories" : null,
     () => categoriesService.list(accessToken!),
   );
+  const [categoryId, setCategoryId] = useState("all");
 
   const {
     data: transactionsResponse,
     isLoading,
     mutate,
   } = useSWR(
-    accessToken ? ["/transactions", page, limit, month, year] : null,
+    accessToken
+      ? ["/transactions", page, limit, month, year, categoryId]
+      : null,
     () =>
       transactionsService.list(accessToken!, {
         page,
-        limit,
+        limit: 10,
         month,
         year,
+        categoryId: categoryId === "all" ? undefined : categoryId,
       }),
   );
 
@@ -56,16 +60,6 @@ export default function DashboardPage() {
     expenseTotal: 0,
     balance: 0,
   };
-
-  function handleMonthChange(month: number) {
-    setMonth(month);
-    setPage(1);
-  }
-
-  function handleYearChange(year: number) {
-    setYear(year);
-    setPage(1);
-  }
 
   function formatCurrency(value: number) {
     return value.toLocaleString("pt-BR", {
@@ -116,8 +110,20 @@ export default function DashboardPage() {
           <TransactionsFilters
             month={month}
             year={year}
-            onMonthChange={handleMonthChange}
-            onYearChange={handleYearChange}
+            categoryId={categoryId}
+            categories={categories}
+            onMonthChange={(month) => {
+              setMonth(month);
+              setPage(1);
+            }}
+            onYearChange={(year) => {
+              setYear(year);
+              setPage(1);
+            }}
+            onCategoryChange={(categoryId) => {
+              setCategoryId(categoryId);
+              setPage(1);
+            }}
           />
 
           <TransactionsList

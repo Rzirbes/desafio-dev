@@ -6,6 +6,7 @@ export type FindManyByUserIdParams = {
   limit: number;
   month?: number;
   year?: number;
+  categoryId?: string;
 };
 
 export type PaginatedTransactions = {

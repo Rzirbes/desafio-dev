@@ -66,11 +66,13 @@ export class PrismaTransactionRepository implements ITransactionRepository {
     limit,
     month,
     year,
+    categoryId,
   }: FindManyByUserIdParams): Promise<PaginatedTransactions> {
     const skip = (page - 1) * limit;
 
     const where: {
       userId: string;
+      categoryId?: string;
       date?: {
         gte: Date;
         lt: Date;
@@ -84,6 +86,10 @@ export class PrismaTransactionRepository implements ITransactionRepository {
         gte: new Date(year, month - 1, 1),
         lt: new Date(year, month, 1),
       };
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
     }
 
     const [transactions, total, summary] = await prisma.$transaction([

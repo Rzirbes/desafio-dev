@@ -1,12 +1,16 @@
 "use client";
 
 import { Select } from "@/components/ui/Select";
+import { Category } from "@/types/category";
 
 type TransactionsFiltersProps = {
   month: number;
   year: number;
+  categoryId: string;
+  categories: Category[];
   onMonthChange: (month: number) => void;
   onYearChange: (year: number) => void;
+  onCategoryChange: (categoryId: string) => void;
 };
 
 const months = [
@@ -27,8 +31,11 @@ const months = [
 export function TransactionsFilters({
   month,
   year,
+  categoryId,
+  categories,
   onMonthChange,
   onYearChange,
+  onCategoryChange,
 }: TransactionsFiltersProps) {
   const currentYear = new Date().getFullYear();
 
@@ -37,9 +44,17 @@ export function TransactionsFilters({
     label: String(currentYear - index),
   }));
 
+  const categoryOptions = [
+    { value: "all", label: "Todas" },
+    ...categories.map((category) => ({
+      value: category.id,
+      label: category.name,
+    })),
+  ];
+
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm">
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <div>
           <label className="mb-2 block text-sm font-medium text-black">
             Mês
@@ -61,6 +76,18 @@ export function TransactionsFilters({
             value={String(year)}
             onValueChange={(value) => onYearChange(Number(value))}
             options={years}
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-black">
+            Categoria
+          </label>
+
+          <Select
+            value={categoryId}
+            onValueChange={onCategoryChange}
+            options={categoryOptions}
           />
         </div>
       </div>

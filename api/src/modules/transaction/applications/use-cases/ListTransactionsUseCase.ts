@@ -12,8 +12,8 @@ type ListTransactionsRequest = {
   limit: number;
   month?: number;
   year?: number;
+  categoryId?: string;
 };
-
 @Injectable()
 export class ListTransactionsUseCase {
   constructor(
@@ -27,6 +27,7 @@ export class ListTransactionsUseCase {
     limit,
     month,
     year,
+    categoryId,
   }: ListTransactionsRequest): Promise<PaginatedTransactions> {
     return this.transactionRepository.findManyByUserId({
       userId,
@@ -34,6 +35,7 @@ export class ListTransactionsUseCase {
       limit,
       month,
       year,
+      categoryId,
     });
   }
 }

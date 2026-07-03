@@ -31,6 +31,7 @@ export class ListTransactionsController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('month') month?: string,
     @Query('year') year?: string,
+    @Query('categoryId') categoryId?: string,
   ) {
     return this.listTransactionsUseCase.execute({
       userId: request.user.id,
@@ -38,6 +39,7 @@ export class ListTransactionsController {
       limit,
       month: month ? Number(month) : undefined,
       year: year ? Number(year) : undefined,
+      categoryId,
     });
   }
 }
