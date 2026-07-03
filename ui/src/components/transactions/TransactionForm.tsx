@@ -49,6 +49,16 @@ export function TransactionForm({
   onCancel,
   onCreateCategory,
 }: TransactionFormProps) {
+  console.log({
+    type,
+    categoryId,
+    typeSelected: [
+      { value: "INCOME", label: "Entrada" },
+      { value: "EXPENSE", label: "Saída" },
+    ].find((option) => option.value === type),
+    categorySelected: categories.find((category) => category.id === categoryId),
+    categories,
+  });
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <FormField

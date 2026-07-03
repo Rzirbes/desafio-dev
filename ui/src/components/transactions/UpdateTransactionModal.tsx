@@ -36,31 +36,38 @@ export function UpdateTransactionModal({
 
   const { accessToken } = useAuth();
 
+  console.log("transaction", transaction);
+
   useEffect(() => {
-    if (!isOpen || !transaction) return;
+    if (!isOpen) return;
+    if (!transaction) return;
 
-    console.log("transaction.categoryId:", transaction.categoryId);
-    console.log("categories:", categories);
-
-    setDescription(transaction.description);
-    setAmount(String(transaction.amount));
-    setType(transaction.type);
-    setCategoryId(transaction.categoryId);
+    setDescription(transaction.description ?? "");
+    setAmount(String(transaction.amount ?? ""));
+    setType(transaction.type as TransactionType);
+    setCategoryId(transaction.categoryId || transaction.category?.id || "");
     setDate(new Date(transaction.date));
-  }, [isOpen, transaction, categories]);
+  }, [isOpen, transaction?._id]);
 
   if (!isOpen || !transaction) return null;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!accessToken) return;
+    if (!accessToken || !transaction) return;
+
+    const formType = type || transaction.type;
+    const formCategoryId =
+      categoryId || transaction.categoryId || transaction.category?.id || "";
+
+    const formDescription = description || transaction.description;
+    const formAmount = amount || String(transaction.amount);
 
     if (
-      !description.trim() ||
-      !amount.trim() ||
-      !type ||
-      !categoryId ||
+      !formDescription.trim() ||
+      !formAmount.trim() ||
+      !formType ||
+      !formCategoryId ||
       !date
     ) {
       toast.error("Preencha todos os campos.");
@@ -70,11 +77,11 @@ export function UpdateTransactionModal({
     setIsLoading(true);
 
     try {
-      await transactionsService.update(accessToken, transaction!._id, {
-        description,
-        amount: Number(amount),
-        type,
-        categoryId,
+      await transactionsService.update(accessToken, transaction._id, {
+        description: formDescription,
+        amount: Number(formAmount),
+        type: formType as TransactionType,
+        categoryId: formCategoryId,
         date: date.toISOString(),
       });
 
@@ -91,7 +98,9 @@ export function UpdateTransactionModal({
       setIsLoading(false);
     }
   }
-
+  const formType = type || transaction.type;
+  const formCategoryId =
+    categoryId || transaction.categoryId || transaction.category?.id || "";
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
@@ -111,10 +120,10 @@ export function UpdateTransactionModal({
           </div>
 
           <TransactionForm
-            description={description}
-            amount={amount}
-            type={type}
-            categoryId={categoryId}
+            description={description || transaction.description}
+            amount={amount || String(transaction.amount)}
+            type={formType as TransactionType}
+            categoryId={formCategoryId}
             date={date}
             categories={categories}
             isLoading={isLoading}

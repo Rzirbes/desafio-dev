@@ -134,6 +134,7 @@ export default function DashboardPage() {
               setIsCreateTransactionModalOpen(true);
             }}
             onEditTransaction={(transaction) => {
+              setIsCreateTransactionModalOpen(false);
               setEditingTransaction(transaction);
             }}
             onDeleteTransaction={handleDeleteTransaction}
@@ -152,6 +153,7 @@ export default function DashboardPage() {
       />
 
       <UpdateTransactionModal
+        key={editingTransaction?._id ?? "update-transaction"}
         isOpen={!!editingTransaction}
         onClose={() => setEditingTransaction(null)}
         categories={categories}
