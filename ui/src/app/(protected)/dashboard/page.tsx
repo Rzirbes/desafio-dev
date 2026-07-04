@@ -3,7 +3,6 @@
 import { useState } from "react";
 import useSWR from "swr";
 
-import { Button } from "@/components/ui/Button";
 import { Header } from "@/components/layout/Header";
 import { CreateTransactionModal } from "@/components/transactions/CreateTransactionModal";
 import { useAuth } from "@/hooks/useAuth";
