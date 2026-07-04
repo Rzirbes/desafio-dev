@@ -2,6 +2,17 @@
 
 API REST desenvolvida com NestJS para gerenciamento financeiro, permitindo autenticação de usuários, gerenciamento de categorias e movimentações financeiras.
 
+## Deploy
+
+**Frontend (Vercel):**
+https://desafio-dev-mocha.vercel.app/
+
+**Backend (Railway):**
+https://considerate-friendship-production.up.railway.app
+
+**Swagger:**
+https://considerate-friendship-production.up.railway.app/swagger
+
 ## Tecnologias
 
 - NestJS
@@ -14,6 +25,7 @@ API REST desenvolvida com NestJS para gerenciamento financeiro, permitindo auten
 - Swagger
 - class-validator
 - class-transformer
+- Jest
 
 ## Funcionalidades
 
@@ -70,15 +82,19 @@ pnpm install
 
 Crie um arquivo `.env`.
 
+No Railway, configure as seguintes variáveis de ambiente:
+
 Exemplo:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/finance_manager"
 
-JWT_SECRET=your-secret-key
-
-ACCESS_TOKEN_EXPIRES_IN=15m
-REFRESH_TOKEN_EXPIRES_IN=7d
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/finance_manager"
+JWT_REFRESH_SECRET="financial_manager_refresh_secret"
+JWT_REFRESH_EXPIRES_IN="7d"
+JWT_EXPIRES_IN="15m"
+JWT_SECRET="financial_manager_access_secret"
+FRONTEND_URL="https://desafio-dev-mocha.vercel.app"
 ```
 
 Altere os valores conforme seu ambiente.
@@ -127,9 +143,16 @@ http://localhost:3000
 ## Documentação da API
 
 Após iniciar a aplicação, a documentação estará disponível em:
+Local:
 
 ```
 http://localhost:3000/docs
+```
+
+Swagger:
+
+```
+https://considerate-friendship-production.up.railway.app/swagger
 ```
 
 A documentação foi construída utilizando Swagger e contém todos os endpoints da aplicação.
@@ -192,6 +215,8 @@ A aplicação implementa:
 - Swagger
 - ValidationPipe
 - Tratamento global de erros
+- Testes unitários dos casos de uso
+- Controle de acesso por usuário autenticado
 
 ## Modelo de Dados
 
@@ -255,6 +280,8 @@ erDiagram
 ## Scripts
 
 ```bash
+pnpm test
+
 pnpm start:dev      # Desenvolvimento
 pnpm build          # Build
 pnpm start:prod     # Produção

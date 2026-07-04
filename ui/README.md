@@ -2,6 +2,19 @@
 
 Frontend da aplicação Finance Manager, desenvolvido com Next.js, responsável pela interface do usuário para gerenciamento de receitas, despesas e categorias.
 
+## Deploy
+
+**Frontend (Vercel):**
+https://desafio-dev-mocha.vercel.app/
+
+**Backend (Railway):**
+https://considerate-friendship-production.up.railway.app
+
+**Swagger:**
+https://considerate-friendship-production.up.railway.app/swagger
+
+---
+
 ## Tecnologias
 
 - Next.js
