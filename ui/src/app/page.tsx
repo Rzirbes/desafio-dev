@@ -4,29 +4,34 @@ import { Button } from "@/components/ui/Button";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background-secondary px-4 text-center">
-      <Image
-        src="/logo.png"
-        alt="Profissionais SA"
-        width={100}
-        height={100}
-        className="mb-6"
-      />
+    <main className="min-h-screen bg-background-secondary">
+      <div className="mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6 text-center">
+        <Image
+          src="/logo.png"
+          alt="Profissionais SA"
+          width={120}
+          height={120}
+          className="mb-8"
+          priority
+        />
 
-      <h1 className="mb-4 text-4xl font-bold text-foreground">
-        Profissionais SA
-      </h1>
+        <h1 className="text-4xl font-bold tracking-tight text-foreground">
+          Profissionais SA
+        </h1>
 
-      <p className="mb-8 text-lg text-foreground-secondary">
-        Desafio Técnico Nível Pleno
-      </p>
+        <p className="mt-3 max-w-sm text-base leading-relaxed text-foreground-secondary">
+          Desafio Técnico Nível Pleno
+        </p>
 
-      <div className="flex w-full max-w-md flex-col gap-3 sm:flex-row">
-        <Button href="/login">ACESSAR SISTEMA</Button>
+        <div className="mt-10 flex w-full flex-col gap-4 sm:flex-row">
+          <Button href="/login" className="flex-1">
+            ACESSAR SISTEMA
+          </Button>
 
-        <Button href="/instructions" variant="outline">
-          VER INSTRUÇÕES
-        </Button>
+          <Button href="/instructions" variant="outline" className="flex-1">
+            VER INSTRUÇÕES
+          </Button>
+        </div>
       </div>
     </main>
   );

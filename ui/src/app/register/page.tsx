@@ -113,25 +113,27 @@ export default function RegisterPage() {
           </select>
         </div> */}
 
-        <Button type="submit" isLoading={isLoading} className="mt-6">
-          {isLoading ? "Criando conta..." : "Criar conta"}
-        </Button>
-
-        {isRegistered ? (
-          <Button href="/login" variant="outline" className="mt-4">
-            Ir para o login
+        <div className="mt-6 flex flex-col gap-4">
+          <Button type="submit" isLoading={isLoading}>
+            {isLoading ? "Criando conta..." : "Criar conta"}
           </Button>
-        ) : (
-          <p className="mt-4 text-center text-sm text-foreground-secondary">
-            Já tem uma conta?{" "}
-            <Link
-              href="/login"
-              className="font-medium text-primary hover:underline"
-            >
-              Entrar
-            </Link>
-          </p>
-        )}
+
+          {isRegistered ? (
+            <Button href="/login" variant="outline">
+              Ir para o login
+            </Button>
+          ) : (
+            <p className="text-center text-sm text-foreground-secondary">
+              Já tem uma conta?{" "}
+              <Link
+                href="/login"
+                className="font-medium text-primary hover:underline"
+              >
+                Entrar
+              </Link>
+            </p>
+          )}
+        </div>
       </form>
     </main>
   );

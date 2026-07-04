@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
           />
           <h1 className="text-3xl font-bold text-gray-800">Profissionais SA</h1>
         </div>
+        <Button href="/login">ACESSAR SISTEMA</Button>
       </header>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
