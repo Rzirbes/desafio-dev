@@ -23,7 +23,9 @@ export async function clientFetcher<T>(
 
   let response = await request(token);
 
-  if (response.status === 401) {
+  const shouldTryRefresh = response.status === 401 && path !== "/sessions";
+
+  if (shouldTryRefresh) {
     const refreshToken = localStorage.getItem("@finance:refreshToken");
 
     if (!refreshToken) {
@@ -47,7 +49,6 @@ export async function clientFetcher<T>(
     }
 
     localStorage.setItem("@finance:accessToken", refreshData.accessToken);
-
     localStorage.setItem("@finance:refreshToken", refreshData.refreshToken);
 
     response = await request(refreshData.accessToken);
@@ -60,6 +61,10 @@ export async function clientFetcher<T>(
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401 && path === "/sessions") {
+      throw new Error("E-mail ou senha inválidos.");
+    }
+
     throw new Error(data?.message ?? "Erro inesperado na requisição");
   }
 
