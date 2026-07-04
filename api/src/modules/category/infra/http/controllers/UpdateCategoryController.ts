@@ -22,7 +22,7 @@ import {
   JwtAuthGuard,
 } from '../../../../auth/infra/http/middlewares/JwtAuthGuard';
 import { UpdateCategoryUseCase } from '../../../applications/use-cases/UpdateCategoryUseCase';
-import { UpdateCategoryDTO } from '../../../applications/UpdateCategoryDTO';
+import { UpdateCategoryDTO } from '../../../applications/dtos/UpdateCategoryDTO';
 
 @ApiTags('Categories')
 @ApiBearerAuth()
